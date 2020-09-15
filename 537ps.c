@@ -3,9 +3,8 @@
 #include "processArgs.h"
 
 int main(int argc, char **argv){
-	flags *flag_list = calloc(1, sizeof(flags));
+	flags *flag_list = initFlags();
 	//process the arguments
-	processArguments(argc,argv);																		
-	free(flags);
+	processArguments(argc,argv);																	
 }
 

@@ -2,16 +2,22 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "processArgs.h"
-typedef struct flags{
-    int flag_p = -1;//specifies the pid of the process that needs to be displayed. If not present, this value will default to false, and program will print all process owned by the current user
-    int flag_s = -1;//display single-character state info about the process. If not present, default to false
-    int flag_U = -1;//Display the amount of user time consumed by the process. If not present, default to true
-    int flag_S = -1;//Display the amount of sytem time consumed by the process. If not present, default to false
-    int flag_v = -1;//Display the amount of virtual memory currently being used (in pages) by this program. If not present,default to false
-    int flag_c = -1;//Display the command-line that started the process. Default to true
-	int length_p = 0;
-    char *content_p;
+
+/**
+ *	Initialize flags
+ */
+flags *initFlags(){
+	flags *flagsVar = calloc(1, sizeof(flags));
+	flagsVar->flag_p = -1;
+	flagsVar->flag_s = -1;
+	flagsVar->flag_U = -1;
+	flagsVar->flag_S = -1;
+	flagsVar->flag_v = -1;
+	flagsVar->flag_c = -1;
+	flagsVar->length_p = 0;
+	return flagsVar;
 }
+
 
 /**
  * Check whether a pid is valid numeric string
@@ -20,7 +26,7 @@ typedef struct flags{
 int isPidValid(char *pid){
 	int pidLength = 0;
 	//loop through the string to check whether each character is a number
-	while (pid[pidLength]!="\0" && isdigit(pid[pidLength])){
+	while (pid[pidLength]!='\0' && isdigit(pid[pidLength])){
 		//increase the length
 		pidLength++;
 	}
@@ -40,11 +46,12 @@ int isFlagValid(){
 	//is the flag a valid letter type
 	//(if it is p_flag)is the flag already used?
 		//check whether the p flag variable is set to -1 	
+	return 0;
 }
 /**
  * Set the flags to default value if they are not already set by users
  */
-int setFlagsToDefault(){
+void setFlagsToDefault(){
 	//check p flag(default false)
 	//TODO: extra credit: will need to change p flag's implementation so user can enter multiple instance of p
 	//check s flag(default false)
@@ -58,22 +65,28 @@ int setFlagsToDefault(){
  */
 void printUsage(){
 }
-int processArguments(int argc,char **arg){
+void processArguments(int argc,char **argv){
   	//check if the count of argument is valid
-	if(argc > 0 && argc < ){
-		int count = 0;
-		//check to see if it is a flag(start with -?)
-		if(arg[count][0]=='-'){
-			//check if the flag is valid
-			//process the flag arg
-				//swith the corresponding flag variable to 1
-				//if it is a p flag, read the next argument as well, which supplies the pid
-					//increase the count
-			//increase the count
-			printf("this is a flag: %s\n", arg[count]);
-			}
+	if(argc > 0){
+		int count = 1;//start from index 1
+		while(count < argc){
+			//check to see if it is a flag(start with -?)
+			if(argv[count][0]=='-'){
+				//check if the flag is valid
+				//process the flag arg
+					//swith the corresponding flag variable to 1
+					//if it is a p flag, read the next argument as well, which supplies the pid
+						//increase the count
+				//increase the count
+				printf("this is a flag: %s\n", argv[count]);
+				}
 			else{
-			//if it is not a flag, return an error
-			printf("Entered an invalid flag: %s \n",);
+				//if it is not a flag, return an error
+				printf("Entered an invalid flag: %s \n",argv[count]);
+				printUsage();
+				exit(1);
 			}
+			count++;
+		}
+	}
 }
