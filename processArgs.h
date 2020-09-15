@@ -1,4 +1,4 @@
 #ifndef PROCESSARGS_H
 #define PROCESSARGS_H
-int processArguments(char **arg);
+int processArguments(int argc,char **arg);
 #endif
