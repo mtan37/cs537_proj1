@@ -1,10 +1,15 @@
 #make file for assignment1 @CS537
-537ps: 537ps.o processArgs.o
-	gcc -Wall 537ps.o processArgs.o -o 537ps
-537ps.o: 537ps.c
-	gcc -c -Wall -pedantic 537ps.c
-processArgs.o: processArgs.c
-	gcc -c -Wall -pedantic processArgs.c
+CC = gcc
+CFLAGS = -c -Wall -pedantic
+ODIR = ./obj
+SDIR = ./src
+OBJECTS = $(ODIR)/537ps.o $(ODIR)/processArgs.o
+537ps:$(OBJECTS)
+	$(CC) -Wall $(OBJECTS) -o 537ps
+$(ODIR)/537ps.o: $(SDIR)/537ps.c
+	$(CC) $(CFLAGS) $< -o $@
+$(ODIR)/processArgs.o: $(SDIR)/processArgs.c
+	$(CC) $(CFLAGS) $< -o $@
 clean:
-	rm *.o
-	rm run
+	rm $(ODIR)/*.o
+	rm 537ps
