@@ -9,7 +9,8 @@ typedef struct flags{
     int flag_v;//Display the amount of virtual memory currently being used (in pages) by this program. If not present,default to false
     int flag_c;//Display the command-line that started the process. Default to true
     int length_p;
-    char *content_p;
+    char **content_p;
+	int content_p_size;//the allocated size of content_p
 }flags;
 /**
  * initalize flag variable to the following state:
@@ -22,5 +23,5 @@ typedef struct flags{
  * int length_p = 0;
  */
 flags *initFlags();
-void processArguments(int argc,char **arg);
+void processArguments(int argc,char **arg,flags *flagsVar);
 #endif
