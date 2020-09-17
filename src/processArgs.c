@@ -4,13 +4,6 @@
 #include <ctype.h>
 #include "processArgs.h"
 const int MAX_PID_LIST_SIZE = 20;
-/**
- * Can now candle basic argument with the correct format
- * TODO: multiple occurance of -p, which should raise an error
- * TODO: the use of false flags such as -s-, -U-, -S-, -v- and -c-
- *
- **/
-
 
 /**
  *	Initialize flags
@@ -52,12 +45,19 @@ int isPidValid(char *pid){
 
 /**
  * Chech whether a flag is has valid type
+ * If valid, return the option length. If not valid, return 0
  */
 int isFlagFormatValid(char *flag){
 	//is the flag the right length?
 	if(strlen(flag) == 2){
 		return 1;
-	}	
+	}
+	else if (strlen(flag) == 3){
+		//check if it ends with '-'
+		if(flag[2] == '-'){
+			return 2;
+		}
+	}
 	return 0;
 }
 
@@ -89,6 +89,8 @@ void setFlagsToDefault(flags *flagsVar){
  * Print usage to console
  */
 void printUsage(){
+	//TODO
+	printf("This is a placeholder for printUsage()\n");
 }
 /**
  * add new pid to the pid list in the flag struct
@@ -96,7 +98,7 @@ void printUsage(){
 void addPidToList(flags *flagsVar, char *pid){
 	//check if the addition will exceed the size limit of the list
 	if(flagsVar->length_p >= MAX_PID_LIST_SIZE){
-		printf("Can't add more pid. Process pid: %s's information will not be displayed\n", pid);
+		printf("Warning: Exceeds pid store list size limit. Process pid %s's information will not be displayed\n", pid);
 		return;
 	}
 	if(isPidValid(pid)){
@@ -105,7 +107,7 @@ void addPidToList(flags *flagsVar, char *pid){
 		(flagsVar->content_p)[(flagsVar->length_p)-1]=pid;		
 	}
 	else{
-		printf("Invalid pid format: %s \n",pid);
+		printf("Error: Invalid pid format: %s \n",pid);
 		printUsage();
 		exit(1);
 	}	
@@ -118,8 +120,16 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 			//check to see if it is a flag(start with -?)
 			if(argv[count][0]=='-'){
 				//check if the flag is valid
-				if(!isFlagFormatValid(argv[count])){
-					printf("Invalid flag format: %s \n",argv[count]);
+				int flagLength = isFlagFormatValid(argv[count]);
+				int isSetTrueFlag = 1;
+				if(flagLength == 1){
+					isSetTrueFlag = 1;
+				}
+				else if (flagLength == 2){
+					isSetTrueFlag = 0;
+				}
+				else {
+					printf("Error: Invalid flag format: %s \n",argv[count]);
                 	printUsage();
                 	exit(1);
 				}
@@ -128,6 +138,12 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 				char flagType = argv[count][1];
 				switch(flagType){
 					case 'p':
+						//check if a p flag is already been set
+						if(flagsVar->flag_p != -1){
+							printf("Error: More than one -p flag is not allowed\n");
+							printUsage();
+							exit(1);
+						}	
 						//switch the flag var
 						flagsVar->flag_p = 1;
 						//increase the count
@@ -137,35 +153,35 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 						break;
 					case 's':
 						//switch the flag var
-						flagsVar->flag_s = 1;
+						flagsVar->flag_s = isSetTrueFlag;
 						break;
 					case 'U':
 						//switch the flag var
-						flagsVar->flag_U = 1;
+						flagsVar->flag_U = isSetTrueFlag;
 						break;
 					case 'S':
 						//switch the flag var
-						flagsVar->flag_S = 1;
+						flagsVar->flag_S = isSetTrueFlag;
 						break;
 					case 'v':
 						//switch the flag var
-						flagsVar->flag_v = 1;
+						flagsVar->flag_v = isSetTrueFlag;
 						break;
 					case 'c':
 						//switch the flag var
-						flagsVar->flag_c = 1;
+						flagsVar->flag_c = isSetTrueFlag;
 						break;
 					default:
-						printf("flag type %s doesn exist \n",argv[count]);
+						printf("Error: Flag type %s doesn exist \n",argv[count]);
 						printUsage();
 						exit(1);
 				}
 				//increase the count
 				count++;
-				}
+			}
 			else{
 				//if it is not a flag, return an error
-				printf("Entered an invalid argument: %s \n",argv[count]);
+				printf("Error: Invalid argument: %s \n",argv[count]);
 				printUsage();
 				exit(1);
 			}
