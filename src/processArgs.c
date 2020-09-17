@@ -138,12 +138,6 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 				char flagType = argv[count][1];
 				switch(flagType){
 					case 'p':
-						//check if a p flag is already been set
-						if(flagsVar->flag_p != -1){
-							printf("Error: More than one -p flag is not allowed\n");
-							printUsage();
-							exit(1);
-						}	
 						//switch the flag var
 						flagsVar->flag_p = 1;
 						//increase the count
