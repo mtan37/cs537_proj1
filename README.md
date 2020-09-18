@@ -6,7 +6,7 @@ Usage:
 	537ps [options]
 		options:
   
-		-p <pid>	Display process information only for the process whose number is
+		-p <pid> or -p<pid>	Display process information only for the process whose number is
 				pid. Multiple occurance is allowed.
 
 		-s		Display the single-character state information about the process. 
