@@ -31,6 +31,11 @@ int isPidValid(char *pid){
 	int pidLength = 0;
 	//loop through the string to check whether each character is a number
 	while (pid[pidLength]!='\0' && isdigit(pid[pidLength])){
+		//if the first digit is 0....
+		if(0 == pidLength && 0 == isdigit(pid[pidLength])){
+			printf("Error: pid can't start with 0\n");
+			return 0;
+		}
 		//increase the length
 		pidLength++;
 	}
@@ -45,14 +50,20 @@ int isPidValid(char *pid){
 
 /**
  * Chech whether a flag is has valid type
- * If valid, return the option length. If not valid, return 0
+ * If valid, return the option type. If not valid, return 0
+ * option type: 1 == flag set option to true. 2 = flag set option to false
  */
 int isFlagFormatValid(char *flag){
+	printf("flag letter: %c\n",flag[1]);//DELETE
 	//is the flag the right length?
-	if(strlen(flag) == 2){
+	if(2 == strlen(flag)){
 		return 1;
 	}
-	else if (strlen(flag) == 3){
+	//check if it is a p flag in the format 537ps -p<pid>
+	else if(strlen(flag) > 2 && 'p' == flag[1]){
+		return 1;
+	}
+	else if (3 == strlen(flag)){
 		//check if it ends with '-'
 		if(flag[2] == '-'){
 			return 2;
@@ -66,22 +77,22 @@ int isFlagFormatValid(char *flag){
  */
 void setFlagsToDefault(flags *flagsVar){
 	//check p flag(default false)
-	if(flagsVar->flag_p == -1)
+	if(-1 == flagsVar->flag_p)
 		flagsVar->flag_p = 0;
 	//check s flag(default false)
-	if(flagsVar->flag_s == -1)
+	if(-1 == flagsVar->flag_s)
 		flagsVar->flag_s = 0;
 	//check U flag(default true)
-	if(flagsVar->flag_U == -1)
+	if(-1 == flagsVar->flag_U)
 		flagsVar->flag_U = 1;
 	//check S flag(default false)
-	if(flagsVar->flag_S == -1)
+	if(-1 == flagsVar->flag_S)
 		flagsVar->flag_S = 0;
 	//check v flag(default false)
-	if(flagsVar->flag_v == -1)
+	if(-1 == flagsVar->flag_v)
 		flagsVar->flag_v = 0;
 	//check c flag(default true)
-	if(flagsVar->flag_c == -1)
+	if(-1 == flagsVar->flag_c)
 		flagsVar->flag_c = 1;
 }
 
@@ -118,14 +129,15 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 		int count = 1;//start from index 1
 		while(count < argc){
 			//check to see if it is a flag(start with -?)
-			if(argv[count][0]=='-'){
+			if('-' == argv[count][0]){
 				//check if the flag is valid
 				int flagLength = isFlagFormatValid(argv[count]);
 				int isSetTrueFlag = 1;
-				if(flagLength == 1){
+				printf("flagLength: %d\n",flagLength);//DELETE
+				if(1 == flagLength){
 					isSetTrueFlag = 1;
 				}
-				else if (flagLength == 2){
+				else if (2 == flagLength){
 					isSetTrueFlag = 0;
 				}
 				else {
@@ -140,10 +152,17 @@ void processArguments(int argc,char **argv, flags *flagsVar){
 					case 'p':
 						//switch the flag var
 						flagsVar->flag_p = 1;
-						//increase the count
-						count++;
-						//read the next argument as well, which supplies the pid
-						addPidToList(flagsVar, argv[count]);
+						//check whether an argument parse is needed
+						if(strlen(argv[count]) > 2){
+							char *pid_p = (argv[count]+2);
+							addPidToList(flagsVar, pid_p);	
+						}
+						else{
+							//increase the count
+							count++;
+							//read the next argument as well, which supplies the pid
+							addPidToList(flagsVar, argv[count]);
+						}
 						break;
 					case 's':
 						//switch the flag var
