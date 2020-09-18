@@ -27,4 +27,4 @@ Usage:
     -c		Display the command-line that started this program.
 			(default true)
 
-	-c- 	turns the -c option off
+	-c- 		turns the -c option off
