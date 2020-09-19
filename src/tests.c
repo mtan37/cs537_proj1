@@ -1,7 +1,4 @@
 #include "tests.h"
-#include "processArgs.h"
-#include "parser.h"
-#include <stdio.h>
 void printFlagsVar(Flags *flagsVar){
     //print out the flags
     printf("p flag is set to: %d\n", flagsVar->flag_p);
@@ -39,4 +36,18 @@ void printStatInfoList(StatInfo **statInfoList, int listLength){
     for (int i = 0; i < listLength; i++){
         printStatInfo(statInfoList[i]);
    }
+}
+
+void printCurrUserProcessList(int currUid){
+    printf("goes into printCurrUserProcessList()\n");
+    printf("uid: %d\n", currUid);
+    ProcessNode *processList = getProcessesList(currUid);
+    ProcessNode *currNode = processList;
+    printf("Processes owned by user: %d\n", currUid);
+    while(NULL != currNode){
+        printf("    process pid: %s\n",currNode->pid);
+        currNode = currNode->next; 
+        free(processList);
+        processList = currNode;
+    }
 }

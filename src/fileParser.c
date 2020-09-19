@@ -4,38 +4,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "parser.h"
-const int BUFFER_S = 100;
-FILE *fileOpener(const char *pid, int flag){
-    char *path = calloc(1,BUFFER_S);
-    //flag = 1 is for opening stat file
-    if(1 == flag){
-        strncpy(path,"/proc/\0",99);
-        strncat(path,pid,BUFFER_S - strlen(path) - 1);
-        strncat(path,"/stat",BUFFER_S - strlen(path) - 1);	
-    }
-    //flag = 2 is for opening statm file
-    else if(2 == flag){
-        strncpy(path,"/proc/\0",99);
-        strncat(path,pid,BUFFER_S - strlen(path) - 1);
-        strncat(path,"/statm",BUFFER_S - strlen(path) - 1);	
-    }
-    //flag = 3 is for opening cmdline file 
-    else if(3 == flag){
-        //TODO
-    }
-    else{
-        printf("Error: Invalid filer opener flag: %d", flag);
-        exit(1);
-    }
-    //open and read file
-	FILE *file = fopen(path,"r");
-    if(file == NULL){
-        printf("Error: stat file is not opened properly with pid: %s",pid);
-        exit(1);
-    }
-    return file;
-}
+#include "fileParser.h"
+const int BUFFER_S = 50;
+
 StatInfo *statParser(const char *pid){
 	StatInfo *statInfoVar = calloc(1,sizeof(StatInfo));
 	statInfoVar->pid = pid;
@@ -80,6 +51,7 @@ StatInfo *statParser(const char *pid){
     //fread(buff,1,BUFFER_S,file);
     //printf("state of buffer: %s, length: %ld", buff,strlen(buff));
     fclose(file);
+    free(buff);
 	return statInfoVar;
 }
 

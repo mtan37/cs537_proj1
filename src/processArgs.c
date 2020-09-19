@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "processArgs.h"
+#include "userProcUtil.h"
 const int MAX_PID_LIST_SIZE = 20;
 
 /**

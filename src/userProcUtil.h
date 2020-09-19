@@ -1,0 +1,14 @@
+#ifndef USERPROCUTIL_H
+#define USERPROCUTIL_H
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <dirent.h>
+#include "fileParser.h"
+typedef struct ProcessNode {
+	char* pid;
+	struct ProcessNode* next;
+} ProcessNode;
+FILE *fileOpener(const char *pid, int flag);
+ProcessNode* getProcessesList(unsigned int uid);
+#endif

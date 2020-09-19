@@ -1,7 +1,6 @@
-#ifndef PARSER_H
-#define PARSER_H
-//parse stat and statm files to extract strings from the list
-
+#ifndef FILEPARSER_H
+#define FILEPARSER_H
+#include "userProcUtil.h"
 typedef struct StatInfo{
 	const char *pid;//pid of the process
 	//variables parsed from stat file
@@ -19,8 +18,21 @@ typedef struct CmdInfo{
 	const char *pid;
 	char *flag_cField;//the command-line that started this program
 } CmdInfo;
-
+/**
+ * Takes in the pid of a process, parse its stat file and store the values in
+ * struct StatInfo and return a pointer to the struct
+ */
 StatInfo *statParser(const char *pid);
+
+/**
+ * Takes in the pid of a process, parse its statm file and store the values in
+ * struct StatmInfo and return a pointer to the struct
+ */
 StatmInfo *statmParser(const char *pid);
+
+/**
+ * Takes in the pid of a process, parse the cmdline file and store the values in
+ * struct CmdInfo and return a pointer to the struct
+ */
 CmdInfo *cmdlineParser(const char *pid);
 #endif
