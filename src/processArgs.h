@@ -1,7 +1,7 @@
 #ifndef PROCESSARGS_H
 #define PROCESSARGS_H
 
-typedef struct flags{
+typedef struct Flags{
     int flag_p;//specifies the pid of the process that needs to be displayed. If not present, this value will default to false, and program will print all process owned by the current user
     int flag_s;//display single-character state info about the process. If not present, default to false
     int flag_U;//Display the amount of user time consumed by the process. If not present, default to true
@@ -10,8 +10,8 @@ typedef struct flags{
     int flag_c;//Display the command-line that started the process. Default to true
     int length_p;
     char **content_p;
-	int content_p_size;//the allocated size of content_p
-}flags;
+    int content_p_size;//the allocated size of content_p
+}Flags;
 /**
  * initalize flag variable to the following state:
  * int flag_p = -1;
@@ -22,6 +22,6 @@ typedef struct flags{
  * int flag_c = -1;
  * int length_p = 0;
  */
-flags *initFlags();
-void processArguments(int argc,char **arg,flags *flagsVar);
+Flags *initFlags();
+void processArguments(int argc,char **arg,Flags *flagsVar);
 #endif
