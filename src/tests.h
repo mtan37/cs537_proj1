@@ -10,5 +10,7 @@
 void printFlagsVar(Flags *flagsVar);
 void printStatInfo(StatInfo *statInfo);
 void printStatInfoList(StatInfo **statInfoList, int listlength);
+void printStatmInfoList(StatmInfo **statmInfoList, int listlength);
+void printCmdlineInfoList(CmdInfo **cmdlineInfoList, int listlength);
 void printCurrUserProcessList(int uid);
 #endif

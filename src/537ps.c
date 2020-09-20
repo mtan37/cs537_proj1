@@ -8,24 +8,29 @@
 
 const int debugg = 1;
 int main(int argc, char **argv){
-    //Flags *flagsVar = initFlags();
-    //process the arguments
-    //processArguments(argc,argv,flagsVar);
-    /*if(flagsVar->flag_p ==1){
-        StatInfo **statInfoList = calloc(flagsVar->length_p,sizeof(void*));
-        for(int i = 0; i< (flagsVar->length_p); i++){        
-            const char *pid = (flagsVar->content_p)[i];
-            printf("read pid before give to parser: %s\n", pid); 
-            StatInfo *statInfo = statParser(pid);
-            statInfoList[i] = statInfo;
-        }
-    }*/
     if(debugg){
         printf("debug section\n");
-        //printFlagsVar(flagsVar);
-        //printStatInfoList(statInfoList, flagsVar->length_p);
-        int uid = getuid();
-        printCurrUserProcessList(uid);
+        Flags *flagsVar = initFlags();
+        //process the arguments
+        processArguments(argc,argv,flagsVar);
+        if(flagsVar->flag_p ==1){
+            StatInfo **statInfoList = calloc(flagsVar->length_p,sizeof(void*));
+            StatmInfo **statmInfoList = calloc(flagsVar->length_p,sizeof(void*));
+            CmdInfo **cmdlineInfoList = calloc(flagsVar->length_p,sizeof(void*));
+            for(int i = 0; i< (flagsVar->length_p); i++){        
+                const char *pid = (flagsVar->content_p)[i];
+                printf("read pid before give to parser: %s\n", pid); 
+                statInfoList[i] = statParser(pid);
+                statmInfoList[i] = statmParser(pid);
+                cmdlineInfoList[i] = cmdlineParser(pid);
+            }
+            printStatInfoList(statInfoList, flagsVar->length_p);
+            printStatmInfoList(statmInfoList, flagsVar->length_p);
+            printCmdlineInfoList(cmdlineInfoList, flagsVar->length_p);
+        }
+            printFlagsVar(flagsVar);
+            //int uid = getuid();
+            //printCurrUserProcessList(uid); TODO: test doesn't pass, wait for Joe
     }
 }
 

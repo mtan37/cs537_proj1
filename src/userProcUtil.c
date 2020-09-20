@@ -6,7 +6,7 @@ int BUFSIZE = 50;
  * Return a string that is a deep copy of the contatination of the string1+srting2
  */
 char* stringConcat(const char* string1, const char* string2) {
-    char* newString = (char*) malloc(strlen(string1) + strlen(string2) + 1);
+    char* newString = (char*) calloc(1,strlen(string1) + strlen(string2) + 1);
     if (NULL == newString) {
         printf("Error: Don't have enough memory for var allocation.\n");
         exit(-1);
@@ -27,36 +27,41 @@ FILE *fileOpener(const char *pid, int flag){
     char *path_tmp = calloc(1,BUFSIZE);
     //TODO: handling error for calloc
     strncpy(path_tmp,"/proc/\0",BUFSIZE);
+    printf("file path - checkpoint #1111: %s\n",path_tmp);
     char *path = stringConcat(path_tmp, pid);
+    printf("file path - checkpoint #2222: %s\n",path);
     free(path_tmp);
     path_tmp = path;//point path_tmp to path to use in later free function
     //flag = 1 is for opening stat file
     if(1 == flag){
         path = stringConcat(path,"/stat");
-        printf("stat file path: %s", path);	
+        printf("stat file path: %s\n", path);	
     }
     //flag = 2 is for opening statm file
     else if(2 == flag){
         path = stringConcat(path,"/statm");
-        printf("statm file path: %s", path);	
+        printf("statm file path: %s\n", path);	
     }
     //flag = 3 is for opening cmdline file 
     else if(3 == flag){
         path = stringConcat(path,"/cmdline");
-        printf("cmdline file path: %s", path);	
+        printf("cmdline file path: %s\n", path);	
     }
     else{
         printf("Error: Invalid filer opener flag: %d", flag);
         exit(1);
     }
+        
+    printf("file path - checkpoint #3333\n");
     free(path_tmp);//re-free path_tmp that is currently pointing at the old path var
     //open and read file
 	FILE *file = fopen(path,"r");
     if(file == NULL){
-        printf("Error: stat file is not opened properly with pid: %s",pid);
+        printf("Error: File is not opened properly with pid: %s",pid);
         free(path);
         exit(1);
     }
+    printf("file path - checkpoint #4444\n");
     free(path);
     return file;
 }

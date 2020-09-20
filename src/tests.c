@@ -31,13 +31,30 @@ void printStatInfo(StatInfo *statInfo){
     printf("    U - amount of user time consumed by the process: %s\n",statInfo->flag_UField);
     printf("    S - amount of system time consumed by the process: %s\n",statInfo->flag_SField);
 }
-   
+void printStatmInfo(StatmInfo *statmInfo){
+    printf("statmInfo for process pid: %s\n",statmInfo->pid);
+    printf("    v - amount of virtual memory currently being used: %s\n",statmInfo->flag_vField);
+}
+void printCmdlineInfo(CmdInfo *cmdlineInfo){
+     printf("cmdlineInfo for process pid: %s\n",cmdlineInfo->pid);
+     printf("    c - command line that started the process: %s\n",cmdlineInfo->flag_cField);
+}   
 void printStatInfoList(StatInfo **statInfoList, int listLength){
     for (int i = 0; i < listLength; i++){
         printStatInfo(statInfoList[i]);
    }
 }
 
+void printStatmInfoList(StatmInfo **statmInfoList, int listLength){
+    for (int i = 0; i < listLength; i++){
+        printStatmInfo(statmInfoList[i]);
+   }
+}
+void printCmdlineInfoList(CmdInfo **cmdlineInfoList, int listLength){ 
+    for (int i = 0; i < listLength; i++){
+        printCmdlineInfo(cmdlineInfoList[i]);
+   }
+}
 void printCurrUserProcessList(int currUid){
     printf("goes into printCurrUserProcessList()\n");
     printf("uid: %d\n", currUid);

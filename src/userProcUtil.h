@@ -9,6 +9,7 @@ typedef struct ProcessNode {
 	char* pid;
 	struct ProcessNode* next;
 } ProcessNode;
+char *stringConcat(const char *string1, const char *string2);
 FILE *fileOpener(const char *pid, int flag);
 ProcessNode* getProcessesList(unsigned int uid);
 #endif
