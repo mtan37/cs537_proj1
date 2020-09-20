@@ -78,7 +78,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
     ProcessNode *head = (ProcessNode*) malloc(sizeof(ProcessNode));
     ProcessNode *curr = head;
 
-    processes = opendir("/proc/");
+    processes = opendir(proc);
     if (processes == NULL) {
         free(curr);
         free(processes);
