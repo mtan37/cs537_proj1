@@ -86,7 +86,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
     }
 
     processInfo = readdir(processes);
-    while (processInfo != NULL) {
+    while ((processInfo = readdir(processes)) != NULL) {
         char *processDirectory = stringConcat(proc, processInfo->d_name);
 	if (processDirectory == NULL) {
             free(curr);
