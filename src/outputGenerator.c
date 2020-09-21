@@ -7,7 +7,7 @@
 #include "fileParser.h"
 
 // Initialize output as char array
-char output[1] = {'\0'};
+char output[] = {'\0'};
 
 // get head here from userProcUtil.c
 // get statInfoVar here from fileParser.c statParser method
