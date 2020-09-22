@@ -13,13 +13,9 @@ void generateOutput(Flags flags) {
 	
     } else { // p flag is not present
 	//use the process from getProcessesList(uid)
-        uid = getuid();
 	head = getProcessesList(uid);
     }
-	
-	
-	
-	
+
     for (int i = 0; i < flags->length_p; i++) {
         printf("%d: ",pid); //print out the pid of the process
         printf(' ');
