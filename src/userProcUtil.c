@@ -99,57 +99,64 @@ ProcessNode* getProcessesList(unsigned int uid) {
     processes = opendir(proc);
     if (processes == NULL) {
         free(curr);
-        free(processes);
+        closedir(processes);
         return NULL;
     }
 
     while ((processInfo = readdir(processes)) != NULL) {
         char *processDirectory = stringConcat(proc, processInfo->d_name);
-	if (processDirectory == NULL) {
+	    printf("%s\n",processDirectory);
+        if (processDirectory == NULL) {
             free(curr);
-	    return NULL;
+            return NULL;
         }
-
-	if ((0 != atoi(processInfo->d_name)) && NULL != (subdirectory = opendir(processDirectory))){
-            uidLine = 0;
-            fileName = (char*) malloc(sizeof(processDirectory) + sizeof(char) * 7 + 1);
-            strcpy(fileName, processDirectory);
-            strcat(fileName, "/status");
-
-            uidFinder = fopen(fileName, "r");
-            if (uidFinder != NULL){
-                while (uidLine < 9){
-                    fgets(buf, BUFSIZE, uidFinder);
-                    uidLine++;
-                }
-                fclose(uidFinder);
-
-                char *uidStore;
-                char *charPtr = buf;
+        char *charPtr;
+        if (0 != strtol(processInfo->d_name,&charPtr,10)
+                && '\0' == *charPtr){
+            subdirectory = opendir(processDirectory);
+            if (NULL == subdirectory){
+               continue; 
+            }else{//only proceed if the subdirectory is opened successefully 
                 uidLine = 0;
+                fileName = stringConcat(processDirectory,"/status"); 
+                uidFinder = fopen(fileName, "r");
+                if (uidFinder != NULL){
+                    while (uidLine < 9){
+                        fgets(buf, BUFSIZE, uidFinder);
+                        uidLine++;
+                    }
+                    fclose(uidFinder);
 
-                uidStore =  strtok_r(charPtr, "\t", &charPtr);
-                while (uidStore != NULL && uidLine < 2){
+                    char *uidStore;
+                    uidLine = 0;
+                    
+                    //skip the first header token
+                    uidStore = strtok_r(buf, "\t", &charPtr);
+                    uidStore = strtok_r(NULL, "\t", &charPtr);
+                    printf("uid of the process: %s\n",uidStore);
+                    //no check in place
+                    //if status file is corrupted, the if will not be entered
                     if (uid == atoi(uidStore)){
-                        curr->pid = malloc(1 + sizeof(processInfo->d_name));
+                        curr->pid = malloc(sizeof(processInfo->d_name));
                         strcpy(curr->pid, processInfo->d_name);
                         curr->next = malloc(sizeof(ProcessNode));
+                        printf("curr pid: %s\n", curr->pid);
                         curr = curr->next;
                         curr->pid = NULL;
                     }
-                    uidLine++;
+                }
+
+                free(fileName);
+                if (-1 == closedir(subdirectory)){
+                    free(curr);
+                    free(processDirectory);
+                    return NULL;
                 }
             }
-
-            free(fileName);
-            if (-1 == closedir(subdirectory)){
-                free(curr);
-                free(processDirectory);
-                return NULL;
-            }
         }
-    free(processDirectory);
+        free(processDirectory);
     }
+    //out of the while reading loop
     if(-1 == closedir(processes)) {
         free(curr);
         return NULL;

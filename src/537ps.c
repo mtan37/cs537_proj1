@@ -43,8 +43,8 @@ int main(int argc, char **argv){
             printCmdlineInfoList(cmdlineInfoList, flagsVar->length_p);
         }
             printFlagsVar(flagsVar);
-            //int uid = getuid();
-            //printCurrUserProcessList(uid); TODO: test doesn't pass, wait for Joe
+            int uid = getuid();
+            printCurrUserProcessList(uid);
     }
 }
 
