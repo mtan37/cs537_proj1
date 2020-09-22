@@ -19,7 +19,7 @@ StatInfo *statParser(const char *pid){
         charTemp =fgetc(file);
         //if reach file end before reading all the neccesary variables
         if(EOF == charTemp){
-            printf("Error: corrupted statm file");
+            printf("Error: corrupted stat file");
             exit(1);    
         }
         while(EOF != charTemp && ' ' != charTemp){
