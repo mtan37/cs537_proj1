@@ -16,9 +16,10 @@ void generateOutput(Flags flags) {
 	ProcessNode *head = getProcessesList(uid);
     }
 
-    for (int i = 0; i < flags->length_p; i++) {
+    for (int i = 0; i < flags->length_p; i++) { //do we need to change flags->length_p to something else if the p flag is not set?
         printf("%d: ",pid); //print out the pid of the process
 
+	//gets all stat information and prints if set
         if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
             StatInfo statInfoVar = *statParser(*pid);
             if (1 == flags->flag_s) {
@@ -32,18 +33,21 @@ void generateOutput(Flags flags) {
 	    }
         }
 
+	//gets statm information if v flag is set
         if (1 == flags->flag_v) {
             StatmInfo statmInfoVar = *statmParser(*pid);
             printf("%s ", statmInfoVar->flag_vField);
         }
 
+	//gets command line information if c flag is set
         if (1 == flags->flag_c) {
             CmdInfo cmdInfoVar = *cmdlineParser(*pid);
             printf("%s", cmdInfoVar->flag_cField);
         }
 
+	//prints newline for end of a process's information
         printf("\n");
-	head = (*head)->next;
+	head = (*head)->next; //goes to next process
     }
 }
 
@@ -52,7 +56,7 @@ void printGeneratedOutput() {
     Flags flags = initFlags();
     processArguments(argc, **argv, flags);
 	
-    //print out header
+    //print out header for proper process info
     if (1 == flags->flag_p) {
         printf("PID ");
     }
@@ -71,7 +75,7 @@ void printGeneratedOutput() {
     if (1 == flags->flag_c) {
         printf("CMD LINE ");
     }
-    printf("\n");
+    printf("\n"); //prints newline after header is printed
 	
     //generate the output by passing flags variable
     generateOutput(flags);
