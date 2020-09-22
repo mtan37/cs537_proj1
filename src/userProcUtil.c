@@ -96,15 +96,14 @@ ProcessNode* getProcessesList(unsigned int uid) {
     ProcessNode *head = (ProcessNode*) malloc(sizeof(ProcessNode));
     ProcessNode *curr = head;
 
-    processes = opendir("/proc/");
+    processes = opendir(proc);
     if (processes == NULL) {
         free(curr);
         free(processes);
         return NULL;
     }
 
-    processInfo = readdir(processes);
-    while (processInfo != NULL) {
+    while ((processInfo = readdir(processes)) != NULL) {
         char *processDirectory = stringConcat(proc, processInfo->d_name);
 	if (processDirectory == NULL) {
             free(curr);
