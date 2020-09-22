@@ -9,11 +9,11 @@
 void generateOutput(Flags flags) {
 
     if (1 == flags->flag_p) { //p flag is present
-	//TODO: use flags->content_p
-	
+	//use flags->content_p
+	ProcessNode *head = flags->content_p[0];
     } else { // p flag is not present
 	//use the process from getProcessesList(uid)
-	head = getProcessesList(uid);
+	ProcessNode *head = getProcessesList(uid);
     }
 
     for (int i = 0; i < flags->length_p; i++) {
