@@ -6,20 +6,7 @@
 #include "userProcUtil.h"
 #include "fileParser.h"
 
-// Initialize output as char array
-char output[] = {'\0'};
-
-// get head here from userProcUtil.c
-// get statInfoVar here from fileParser.c statParser method
-// get statmInfoVar here from fileParser.c statmParser method
-// get cmdInfoVar here from fileParser.c cmdlineParser method
-
 void generateOutput(Flags flags) {
-
-    if (sizeof(flags) < 9) {
-        // TODO: error message
-        return NULL;
-    }
 
     // Adds all pid's to the output if p flag is set in command line
     if (flags->flag_p == 1) {
@@ -43,31 +30,35 @@ void generateOutput(Flags flags) {
 
     // Adds user time consumed to output if U flag is set in command line
     if (flags->flag_U == 1) {
-        strcat(output, statInfoVar->flag_UField);
-	strcat(output, ' ');
+        printf("%2", statInfoVar->flag_UField);
+	printf(' ');
     }
 
     // Adds system time consumed to output if S flag is set in command line
     if (flags->flag_S == 1) {
-        strcat(output, statInfoVar->flagSField);
-	strcat(output, ' ');
+	    //TODO: get statInfoVar
+        printf("%s", statInfoVar->flagSField);
+	printf(' ');
     }
 
     // Adds amount of virtual memory currently being used (in pages) by the program to output if v flag is set in command line
     if (flags->flag_v == 1) {
-        strcat(output, statmInfoVar->flag_vField);
-	strcat(output, ' ');
+	    //TODO: Get statmInfoVar
+        printf("%s", statmInfoVar->flag_vField);
+	printf(' ');
     }
 
     // Adds command line info that started the program to output if c flag is set in command line
     if (flags->flag_c == 1) {
-       strcat(output, '[');
-       strcat(output, cmdInfoVar->flag_cField);
-       strcat(output, ']');
+	    //TODO: Get cmdInfoVar
+        printf("[");
+        printf("%s", cmdInfoVar->flag_cField);
+        printf("] ");
     }
-    
-    // print output here
-    printf("%s", output);
-    free(output);
-    output = NULL;
+	
+    printf("\n");
+}
+
+void printGeneratedOutput() {
+	
 }
