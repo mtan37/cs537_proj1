@@ -7,58 +7,82 @@
 #include "fileParser.h"
 
 void generateOutput(Flags flags) {
+	
+    //TODO: get 
 
-    // Adds all pid's to the output if p flag is set in command line
-    if (flags->flag_p == 1) {
-        ProcessNode *curr;
-	if (head == NULL) {
-            return;
-        }
-	curr = head;
-	while (cur != NULL) {
-            strcat(output, temp->pid);
-	    strcat(output, ' ');
-	    curr = curr->next;
-        }
+    if (1 == flags->flag_p) { //p flag is present
+	//use flags->content_p
+	
+    } else { // p flag is not present
+	//use the process from getProcessesList(uid)
+        uid = getuid();
+	head = getProcessesList(uid);
     }
-
-    // Adds state to output if s flag is set in command line
-    if (flags->flag_s == 1) {
-        strcat(output, statInfoVar->flag_sField);
-	strcat(output, ' ');
+	
+	
+	
+	
+	
+    printf("%d: ",pid); //print out the pid of the process
+    printf(' ');
+	
+    if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
+        StatInfo statInfoVar = *statParser(*pid);
+        if (1 == flags->flag_s) {
+            printf("%s", statInfoVar->*flag_sField);
+            printf(' ');
+	}
+	if (1 == flags->flag_U) {
+            printf("%s", statInfoVar->*flag_sField);
+            printf(' ');
+	}
+	if (1 == flags->flag_S) {
+            printf("%s", statInfoVar->*flag_sField);
+            printf(' ');
+	}
     }
-
-    // Adds user time consumed to output if U flag is set in command line
-    if (flags->flag_U == 1) {
-        printf("%2", statInfoVar->flag_UField);
-	printf(' ');
-    }
-
-    // Adds system time consumed to output if S flag is set in command line
-    if (flags->flag_S == 1) {
-	    //TODO: get statInfoVar
-        printf("%s", statInfoVar->flagSField);
-	printf(' ');
-    }
-
-    // Adds amount of virtual memory currently being used (in pages) by the program to output if v flag is set in command line
-    if (flags->flag_v == 1) {
-	    //TODO: Get statmInfoVar
+	
+    if (1 == flags->flag_v) {
+        StatmInfo statmInfoVar = *statmParser(*pid);
         printf("%s", statmInfoVar->flag_vField);
-	printf(' ');
+        printf(' ');
     }
-
-    // Adds command line info that started the program to output if c flag is set in command line
-    if (flags->flag_c == 1) {
-	    //TODO: Get cmdInfoVar
-        printf("[");
+	
+    if (1 == flags->flag_c) {
+        CmdInfo cmdInfoVar = *cmdlineParser(*pid);
         printf("%s", cmdInfoVar->flag_cField);
-        printf("] ");
+        printf(' ');
     }
 	
     printf("\n");
 }
 
 void printGeneratedOutput() {
+    //create flags variable here and call processArguments(argc, **argv, flags)
+    Flags flags = initFlags();
+    processArguments(argc, **argv, flags);
 	
+    //print out header
+    if (1 == flags->flag_p) {
+        printf("PID ");
+    }
+    if (1 == flags->flag_s) {
+        printf("STATE ");
+    }
+    if (1 == flags->flag_U) {
+        printf("USER TIME ");
+    }
+    if (1 == flags->flag_S) {
+        printf("SYSTEM TIME ");
+    }
+    if (1 == flags->flag_v) {
+        printf("VIRTUAL MEMORY ");
+    }
+    if (1 == flags->flag_c) {
+        printf("CMD LINE ");
+    }
+    printf("\n");
+	
+    //generate the output by passing flags variable
+    generateOutput(flags);
 }
