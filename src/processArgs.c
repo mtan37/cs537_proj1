@@ -17,21 +17,41 @@ Flags *initFlags(){
     flagsVar->flag_S = -1;
     flagsVar->flag_v = -1;
     flagsVar->flag_c = -1;
+    flagsVar->flag_m = -1;
     flagsVar->length_p = 0;
-    flagsVar->content_p_size = 20;//default size 20
+    flagsVar->content_p_size = MAX_PID_LIST_SIZE;//default size 20
     flagsVar->content_p = calloc(flagsVar->content_p_size, sizeof(char*));
+    flagsVar->addr_m = 0;
+    flagsVar->length_m = 0;
     return flagsVar;
 }
-
-
-/**
+/*
+ * Takes a char array and check if all chars are digits
+ * Return 1 if they are all digits, and return 0 otherwise
+ */
+int isInputDigits(char *input){
+    int i =0;
+    while('\0' != input[i]){
+        if(!isdigit(input[i])){
+           return 0;  
+        }
+        i++;
+    }
+    if(i > 0){
+        return 1;    
+    }
+    else{
+        return 0;
+    }
+}
+/*
  * Check whether a pid is valid numeric string
  * If valid, return the length of the pid string. If not valid, return 0
  */
 int isPidValid(char *pid){
     int pidLength = 0;
     //loop through the string to check whether each character is a number
-    while (pid[pidLength]!='\0'){
+    while ('\0' != pid[pidLength]){
         //if is not a digit...
         if(!isdigit(pid[pidLength])){
             return 0;
@@ -53,13 +73,20 @@ int isPidValid(char *pid){
     }
 }
 
+/*
+ * Check if the passed in addr string contains a valid memory address
+ */
+int isMemAddrFormatValid(char *addr){
+    //TODO
+    return 1;
+}
+
 /**
  * Chech whether a flag is has valid type
  * If valid, return the option type. If not valid, return 0
  * option type: 1 == flag set option to true. 2 = flag set option to false
  */
 int isFlagFormatValid(char *flag){
-    printf("flag letter: %c\n",flag[1]);//DELETE
     //is the flag the right length?
     if(2 == strlen(flag)){
         return 1;
@@ -99,6 +126,9 @@ void setFlagsToDefault(Flags *flagsVar){
     //check c flag(default true)
     if(-1 == flagsVar->flag_c)
         flagsVar->flag_c = 1;
+    //check m flag(default false)
+    if(-1 == flagsVar->flag_m)
+        flagsVar->flag_m = 0;
 }
 
 /**
@@ -119,6 +149,7 @@ void printUsage(){
     printf("    -v- turns the -v option off\n");
     printf("    -c Display the command-line that started this program.\n");
     printf("    -c- turns the -c option off\n");
+    printf("    -m <addr> <len> Display content of a process's memory.\n");
 }
 /**
  * add new pid to the pid list in the flag struct
@@ -150,7 +181,6 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                 //check if the flag is valid
                 int flagLength = isFlagFormatValid(argv[count]);
                 int isSetTrueFlag = 1;
-                printf("flagLength: %d\n",flagLength);//DELETE
                 if(1 == flagLength){
                     isSetTrueFlag = 1;
                 }
@@ -200,6 +230,40 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                     case 'c':
                         //switch the flag var
                         flagsVar->flag_c = isSetTrueFlag;
+                        break;
+                    case 'm'://only accept the first occurance of m
+                        //increase the count, and load the address
+                        count++;
+                        if(-1 == flagsVar->flag_m && 1 == isMemAddrFormatValid(argv[count])){
+                            char *tmpPtr;
+                            flagsVar->addr_m = strtol(argv[count],&tmpPtr,16);
+                            //check if the mem addr is the right format
+                            if('\0' != *tmpPtr){
+                                //roll back the assignment
+                                flagsVar->addr_m = 0;
+                                //skip the next argument as well, since -m takes in two arguments
+                                count++;
+                                break; 
+                            }       
+                        }
+                        else{
+                            count++;
+                            break;
+                        }
+                        //increase the count and load the length
+                        count++;
+                        
+                        if(1 == isInputDigits(argv[count])){
+                            flagsVar->length_m = atoi(argv[count]);
+                        }
+                        else{
+                            //roll back the assignment
+                            flagsVar->addr_m = 0;
+                            flagsVar->length_m = 0;
+                            break; 
+                        }       
+                        //switch the flag var
+                        flagsVar->flag_m = 1;
                         break;
                     default:
                         printf("Error: Flag type %s doesn exist \n",argv[count]);

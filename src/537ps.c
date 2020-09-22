@@ -5,7 +5,7 @@
 #include "fileParser.h"
 #include "userProcUtil.h"
 #include "tests.h"
-
+#include "memReader.h"
 const int debugg = 1;
 int main(int argc, char **argv){
     if(debugg){
@@ -23,6 +23,20 @@ int main(int argc, char **argv){
                 statInfoList[i] = statParser(pid);
                 statmInfoList[i] = statmParser(pid);
                 cmdlineInfoList[i] = cmdlineParser(pid);
+                if(flagsVar->flag_m ==1) { 
+                    unsigned char *readMemResult = readMem(pid, flagsVar->addr_m, flagsVar->length_m);
+                    if(readMemResult != NULL){
+                        printf("%lx: ",flagsVar->addr_m);
+                        //print the mem content it in a loop
+                        for(int i = 0; i < flagsVar-> length_m;i++){
+                            printf("%02x ", readMemResult[i]);
+                        }
+                        printf("\n");
+                    }
+                    else{
+                        printf("Requested mem range is not mapped\n");
+                    }
+                }
             }
             printStatInfoList(statInfoList, flagsVar->length_p);
             printStatmInfoList(statmInfoList, flagsVar->length_p);

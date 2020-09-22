@@ -21,47 +21,61 @@ char* stringConcat(const char* string1, const char* string2) {
  *  flag = 1: /proc/<pid>/stat
  *  flag = 2: /proc/<pid>/statm
  *  flag = 3: /proc/<pid>/cmdline
- *
+ *  Return null if the file pointed at the file path doesn't exist
  */
 FILE *fileOpener(const char *pid, int flag){
     char *path_tmp = calloc(1,BUFSIZE);
     //TODO: handling error for calloc
     strncpy(path_tmp,"/proc/\0",BUFSIZE);
-    printf("file path - checkpoint #1111: %s\n",path_tmp);
     char *path = stringConcat(path_tmp, pid);
-    printf("file path - checkpoint #2222: %s\n",path);
     free(path_tmp);
     path_tmp = path;//point path_tmp to path to use in later free function
     //flag = 1 is for opening stat file
     if(1 == flag){
         path = stringConcat(path,"/stat");
-        printf("stat file path: %s\n", path);	
     }
     //flag = 2 is for opening statm file
     else if(2 == flag){
         path = stringConcat(path,"/statm");
-        printf("statm file path: %s\n", path);	
     }
     //flag = 3 is for opening cmdline file 
     else if(3 == flag){
         path = stringConcat(path,"/cmdline");
-        printf("cmdline file path: %s\n", path);	
+    }
+    //flag = 4 is for opening maps file 
+    else if(4 == flag){
+        path = stringConcat(path,"/maps");
+    }
+    //flag = 5 is for opening mems file 
+    else if(5 == flag){
+        path = stringConcat(path,"/mem");
     }
     else{
         printf("Error: Invalid filer opener flag: %d", flag);
         exit(1);
     }
         
-    printf("file path - checkpoint #3333\n");
     free(path_tmp);//re-free path_tmp that is currently pointing at the old path var
+    if(5 == flag){
+        int pid_int = atoi(pid);
+        if(0 != pid_int){
+            int ptraceReturn = ptrace(PTRACE_ATTACH, pid_int, 0, 0);
+            if (ptraceReturn == -1){
+               return NULL;
+            }
+            waitpid(pid_int, NULL, 0);
+        }
+        else{
+            printf("Error: can't read non-int pid input");
+            return NULL;
+        }
+    }
     //open and read file
 	FILE *file = fopen(path,"r");
-    if(file == NULL){
-        printf("Error: File is not opened properly with pid: %s",pid);
+    if(file == NULL){//in the case of the file doesn't exist
         free(path);
-        exit(1);
+        return NULL;
     }
-    printf("file path - checkpoint #4444\n");
     free(path);
     return file;
 }
@@ -70,7 +84,6 @@ FILE *fileOpener(const char *pid, int flag){
  * Return the head of a linked list of all the processes owned by the uid
  */
 ProcessNode* getProcessesList(unsigned int uid) {
-    printf("Enters function getProcessesList\n");
     DIR *processes; // pointer to /proc
     DIR *subdirectory; // current process directory in /proc
     struct dirent *processInfo; // current subdirectory info

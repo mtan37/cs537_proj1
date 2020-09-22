@@ -8,9 +8,12 @@ typedef struct Flags{
     int flag_S;//Display the amount of sytem time consumed by the process. If not present, default to false
     int flag_v;//Display the amount of virtual memory currently being used (in pages) by this program. If not present,default to false
     int flag_c;//Display the command-line that started the process. Default to true
+    int flag_m;//Display the contents of a process's memory
     int length_p;
     char **content_p;
     int content_p_size;//the allocated size of content_p
+    unsigned long addr_m;
+    long length_m;
 }Flags;
 /**
  * initalize flag variable to the following state:

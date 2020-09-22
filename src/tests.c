@@ -7,6 +7,7 @@ void printFlagsVar(Flags *flagsVar){
     printf("S flag is set to: %d\n", flagsVar->flag_S);
     printf("v flag is set to: %d\n", flagsVar->flag_v);
     printf("c flag is set to: %d\n", flagsVar->flag_c);
+    printf("m flag is set to: %d\n", flagsVar->flag_m);
     //print out the length of the pid list
     printf("pid list length: %d\n", flagsVar->length_p);
     //loop through the pid list and print out the content

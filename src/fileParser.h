@@ -1,5 +1,11 @@
 #ifndef FILEPARSER_H
 #define FILEPARSER_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "userProcUtil.h"
 typedef struct StatInfo{
 	const char *pid;//pid of the process

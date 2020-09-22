@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/ptrace.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "fileParser.h"
 typedef struct ProcessNode {
 	char* pid;
