@@ -1,5 +1,5 @@
 #include "outputGenerator.h"
-void printHeader() {
+void printHeader(Flags *flags) {
     //print out header
     if (1 == flags->flag_p) {
         printf("PID ");
@@ -53,7 +53,7 @@ void generateOutput(Flags *flags) {
         curr = head;
         needFreeList = 1;
     }
-    printHeader();
+    printHeader(flags);
     while(*head != NULL) {
         printf("%d: ",pid); //print out the pid of the process
         if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
