@@ -34,16 +34,17 @@ void generateOutput(Flags *flags) {
         ProcessNode *head = malloc(sizeof(ProcessNode));
         ProcessNode *curr = head;
         ProcessNode *tmpPtr;
-        int i;
-	int counter = flags->content_p_size
-        while(i = 0; i < counter; i++) {
+        int i = 0;
+	int counter = flags->content_p_size;
+        while(i < counter) {
             curr->pid = flags->content_p[i];
             curr->next = malloc(sizeof(ProcessNode));
             tmpPtr = curr;
             curr = curr->next;
         }
         free(curr);
-        tmpPtr->next = NULL
+        tmpPtr->next = NULL;
+        i++;
     } else { // p flag is not present
         //use the process from getProcessesList(uid)
 	int uid = getuid();
@@ -85,11 +86,11 @@ void generateOutput(Flags *flags) {
         }
 	    
         if (1 == flags->flag_m) {
-            unsigned char *memContent = readMem(curr->pid, flags->addr_m, flags->length_m)
+            unsigned char *memContent = readMem(curr->pid, flags->addr_m, flags->length_m);
             if(memContent != NULL){
-                printf("%lx: ",flagsVar->addr_m);
+                printf("%lx: ",flags->addr_m);
                 //print the mem content it in a loop
-                for(int i = 0; i < flagsVar-> length_m;i++){
+                for(int i = 0; i < flags->length_m;i++){
                     printf("%02x ", memContent[i]);
                 }
                 printf("\n");
@@ -106,7 +107,7 @@ void generateOutput(Flags *flags) {
     if(1 == needFreeList){
         ProcessNode *next;
         while(NULL != head->next){
-            next = *head->next;
+            next = head->next;
             free(head);
             head = next;
         }
