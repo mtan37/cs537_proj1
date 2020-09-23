@@ -95,7 +95,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
 
     ProcessNode *head = (ProcessNode*) malloc(sizeof(ProcessNode));
     ProcessNode *curr = head;
-
+    ProcessNode *end = NULL;
     processes = opendir(proc);
     if (processes == NULL) {
         free(curr);
@@ -141,13 +141,15 @@ ProcessNode* getProcessesList(unsigned int uid) {
                         strcpy(curr->pid, processInfo->d_name);
                         curr->next = malloc(sizeof(ProcessNode));
                         printf("curr pid: %s\n", curr->pid);
+                        end = curr;
                         curr = curr->next;
                         curr->pid = NULL;
                     }
                 }
-
                 free(fileName);
                 if (-1 == closedir(subdirectory)){
+                    free(curr->pid);
+                    free(curr->next);
                     free(curr);
                     free(processDirectory);
                     return NULL;
@@ -155,6 +157,10 @@ ProcessNode* getProcessesList(unsigned int uid) {
             }
         }
         free(processDirectory);
+    }
+    if(NULL != end){
+        free(end->next);
+        end->next = NULL; 
     }
     //out of the while reading loop
     if(-1 == closedir(processes)) {
