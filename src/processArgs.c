@@ -199,6 +199,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                     case 'p':
                         //switch the flag var
                         flagsVar->flag_p = 1;
+                            //add another check so if a m flag is already present, and this is the second p, it will return error TODO
                         //check whether an argument parse is needed
                         if(strlen(argv[count]) > 2){
                             char *pid_p = (argv[count]+2);
@@ -235,6 +236,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                         //increase the count, and load the address
                         count++;
                         if(-1 == flagsVar->flag_m && 1 == isMemAddrFormatValid(argv[count])){
+                            //add another check so if there are multiple occurance of p, it will return error TODO
                             char *tmpPtr;
                             flagsVar->addr_m = strtol(argv[count],&tmpPtr,16);
                             //check if the mem addr is the right format

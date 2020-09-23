@@ -1,9 +1,17 @@
 #ifndef OUTPUTGENERATOR_H
 #define OUTPUTGENERATOR_H
-//generates and formats the output of the program
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include "processArgs.h"
+#include "userProcUtil.h"
+#include "fileParser.h"
+#include "memReader.h"
+
 /*
  * Generates the output based on given flags 
  */
-void generateOutput(Flags flags);
-void printGeneratedOutput();
+void generateOutput(Flags *flags);
 #endif

@@ -6,9 +6,16 @@
 #include "userProcUtil.h"
 #include "tests.h"
 #include "memReader.h"
+#include "outputGenerator.h"
 const int debugg = 1;
 int main(int argc, char **argv){
-    if(debugg){
+    if(!debugg){
+        Flags *flagsVar = initFlags();
+        //process the arguments
+        processArguments(argc,argv,flagsVar);
+        generateOutput(flagsVar);     
+    }
+    else{
         printf("debug section\n");
         Flags *flagsVar = initFlags();
         //process the arguments
