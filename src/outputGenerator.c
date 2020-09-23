@@ -34,7 +34,8 @@ void generateOutput(Flags *flags) {
         ProcessNode *head = malloc(sizeof(ProcessNode));
         ProcessNode *curr = head;
         ProcessNode *tmpPtr;
-        while(int i = 0; i < flags->content_p_size; i++){
+	    int i;
+        while(i = 0; i < flags->content_p_size; i++){
             curr->pid = content_p[i]
             curr->next = malloc(sizeof(ProcessNode));
             tmpPtr = curr;
