@@ -35,8 +35,9 @@ void generateOutput(Flags *flags) {
         ProcessNode *curr = head;
         ProcessNode *tmpPtr;
         int i;
-        while(i = 0; i < flags->content_p_size; i++){
-            curr->pid = content_p[i]
+	int counter = flags->content_p_size
+        while(i = 0; i < counter; i++) {
+            curr->pid = flags->content_p[i];
             curr->next = malloc(sizeof(ProcessNode));
             tmpPtr = curr;
             curr = curr->next;
@@ -45,6 +46,7 @@ void generateOutput(Flags *flags) {
         tmpPtr->next = NULL
     } else { // p flag is not present
         //use the process from getProcessesList(uid)
+	int uid = getuid();
         head = getProcessesList(uid);
         if(head == NULL){
             printf("Current user doesn't own any processes\n");
@@ -54,10 +56,11 @@ void generateOutput(Flags *flags) {
         needFreeList = 1;
     }
     printHeader(flags);
-    while(*head != NULL) {
-        printf("%d: ",pid); //print out the pid of the process
+    curr = head;
+    while(curr != NULL) {
+        printf("%s: ", curr->pid); //print out the pid of the process
         if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
-            StatInfo *statInfoVar = statParser(pid);
+            StatInfo *statInfoVar = statParser(curr->pid);
             if (1 == flags->flag_s) {
                 printf("%s ", statInfoVar->flag_sField);
             }
@@ -72,17 +75,17 @@ void generateOutput(Flags *flags) {
         }
 
         if (1 == flags->flag_v) {
-            StatmInfo *statmInfoVar = statmParser(pid);
+            StatmInfo *statmInfoVar = statmParser(curr->pid);
             printf("%s ", statmInfoVar->flag_vField);
         }
 
         if (1 == flags->flag_c) {
-            CmdInfo *cmdInfoVar = cmdlineParser(pid);
+            CmdInfo *cmdInfoVar = cmdlineParser(curr->pid);
             printf("%s ", cmdInfoVar->flag_cField);
         }
 	    
         if (1 == flags->flag_m) {
-            unsigned char *memContent = readMem(flags->pid, flags->addr_m, flags->length_m)
+            unsigned char *memContent = readMem(curr->pid, flags->addr_m, flags->length_m)
             if(memContent != NULL){
                 printf("%lx: ",flagsVar->addr_m);
                 //print the mem content it in a loop
@@ -97,7 +100,7 @@ void generateOutput(Flags *flags) {
 
         }
         printf("\n");
-	*head = (*head)->next;
+	curr = curr->next;
     }
     //free the linked list struct is it is allocated in this function
     if(1 == needFreeList){
