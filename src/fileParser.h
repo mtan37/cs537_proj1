@@ -27,18 +27,21 @@ typedef struct CmdInfo{
 /**
  * Takes in the pid of a process, parse its stat file and store the values in
  * struct StatInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
  */
 StatInfo *statParser(const char *pid);
 
 /**
  * Takes in the pid of a process, parse its statm file and store the values in
  * struct StatmInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
  */
 StatmInfo *statmParser(const char *pid);
 
 /**
  * Takes in the pid of a process, parse the cmdline file and store the values in
  * struct CmdInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
  */
 CmdInfo *cmdlineParser(const char *pid);
 #endif

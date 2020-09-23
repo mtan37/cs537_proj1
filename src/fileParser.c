@@ -4,10 +4,17 @@ const int BUFFER_S = 50;
 StatInfo *statParser(const char *pid){
 	StatInfo *statInfoVar = calloc(1,sizeof(StatInfo));
 	statInfoVar->pid = pid;
+    if(statInfoVar == NULL){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1);        
+    }
     //TODO ERROR HANDLER for all calloc and malloc
 	//TODO Add free() to all allocated heap variables
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,1);
+    if(file == NULL){//the pid doesn't exist
+        return NULL;
+    }
     //continue read until get all the needed variable of end of the line
     char charTemp = '@';
     int i = 0;
@@ -52,6 +59,9 @@ StatmInfo *statmParser(const char *pid){
 	StatmInfo *statmInfoVar = calloc(1,sizeof(StatmInfo));
 	char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,2);
+    if(file == NULL){//the pid doesn't exist
+        return NULL;
+    }
     //continue read until get all the needed variable of end of the line
     char charTemp = '@';
     int i = 0;
@@ -86,6 +96,9 @@ CmdInfo *cmdlineParser(const char *pid){
 	CmdInfo *cmdInfoVar = calloc(1,sizeof(CmdInfo));
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,3);	
+    if(file == NULL){//the pid doesn't exist
+        return NULL;
+    }
     char charTemp = '-';
     int i = 0;
     int run = 1;

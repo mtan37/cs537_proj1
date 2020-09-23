@@ -13,5 +13,5 @@
 /*
  * Generates the output based on given flags 
  */
-void generateOutput(Flags *flags);
+void generateOutput(Flags *flags, int uid);
 #endif

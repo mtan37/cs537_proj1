@@ -105,7 +105,6 @@ ProcessNode* getProcessesList(unsigned int uid) {
 
     while ((processInfo = readdir(processes)) != NULL) {
         char *processDirectory = stringConcat(proc, processInfo->d_name);
-	    printf("%s\n",processDirectory);
         if (processDirectory == NULL) {
             free(curr);
             return NULL;
@@ -114,9 +113,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
         if (0 != strtol(processInfo->d_name,&charPtr,10)
                 && '\0' == *charPtr){
             subdirectory = opendir(processDirectory);
-            if (NULL == subdirectory){
-               continue; 
-            }else{//only proceed if the subdirectory is opened successefully 
+            if (NULL != subdirectory){//only proceed if the subdirectory is opened successefully 
                 uidLine = 0;
                 fileName = stringConcat(processDirectory,"/status"); 
                 uidFinder = fopen(fileName, "r");
@@ -133,14 +130,12 @@ ProcessNode* getProcessesList(unsigned int uid) {
                     //skip the first header token
                     uidStore = strtok_r(buf, "\t", &charPtr);
                     uidStore = strtok_r(NULL, "\t", &charPtr);
-                    printf("uid of the process: %s\n",uidStore);
                     //no check in place
                     //if status file is corrupted, the if will not be entered
                     if (uid == atoi(uidStore)){
                         curr->pid = malloc(sizeof(processInfo->d_name));
                         strcpy(curr->pid, processInfo->d_name);
                         curr->next = malloc(sizeof(ProcessNode));
-                        printf("curr pid: %s\n", curr->pid);
                         end = curr;
                         curr = curr->next;
                         curr->pid = NULL;

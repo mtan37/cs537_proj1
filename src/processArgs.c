@@ -1,9 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 #include "processArgs.h"
-#include "userProcUtil.h"
 const int MAX_PID_LIST_SIZE = 20;
 
 /**
@@ -77,8 +72,12 @@ int isPidValid(char *pid){
  * Check if the passed in addr string contains a valid memory address
  */
 int isMemAddrFormatValid(char *addr){
-    //TODO
-    return 1;
+    char *charPtr;
+    strtol(addr,&charPtr,16);
+    if(*charPtr == '\0'){
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -199,11 +198,11 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                     case 'p':
                         //switch the flag var
                         flagsVar->flag_p = 1;
-                            //add another check so if a m flag is already present, and this is the second p, it will return error TODO
                         //check whether an argument parse is needed
-                        if(strlen(argv[count]) > 2){
+                        if(strlen(argv[count]) > 2){//if is needed
                             char *pid_p = (argv[count]+2);
                             addPidToList(flagsVar, pid_p);  
+                        
                         }
                         else{
                             //increase the count
@@ -235,8 +234,8 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                     case 'm'://only accept the first occurance of m
                         //increase the count, and load the address
                         count++;
-                        if(-1 == flagsVar->flag_m && 1 == isMemAddrFormatValid(argv[count])){
-                            //add another check so if there are multiple occurance of p, it will return error TODO
+                        int isMemAddrValid = isMemAddrFormatValid(argv[count]);
+                        if(-1 == flagsVar->flag_m && 1 == isMemAddrValid){
                             char *tmpPtr;
                             flagsVar->addr_m = strtol(argv[count],&tmpPtr,16);
                             //check if the mem addr is the right format
@@ -248,24 +247,34 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                                 break; 
                             }       
                         }
-                        else{
-                            count++;
-                            break;
+                        else{//skip the length argument
+                            if (1 != isMemAddrValid){
+                                printf("Error: Invalid memory address input format\n");
+                                exit(1);
+                            }else{
+                                printf("Warning: duplicate -m flag. Only the first valid instance will be used\n"); 
+                                count++;
+                                break;
+                            }
                         }
                         //increase the count and load the length
                         count++;
-                        
+                        if(count < argc){
                         if(1 == isInputDigits(argv[count])){
                             flagsVar->length_m = atoi(argv[count]);
                         }
                         else{
-                            //roll back the assignment
-                            flagsVar->addr_m = 0;
-                            flagsVar->length_m = 0;
-                            break; 
+                            printf("Error: Invalid memory address range length input format\n");
+                            exit(1);
                         }       
                         //switch the flag var
                         flagsVar->flag_m = 1;
+                        }
+                        else{
+                            printf("Error: missing mem length argument\n");
+                            printUsage();
+                            exit(1);
+                        }
                         break;
                     default:
                         printf("Error: Flag type %s doesn exist \n",argv[count]);
@@ -277,7 +286,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
             }
             else{
                 //if it is not a flag, return an error
-                printf("Error: Invalid argument: %s \n",argv[count]);
+                printf("Error: Invalid argument.\n");
                 printUsage();
                 exit(1);
             }

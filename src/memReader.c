@@ -20,7 +20,6 @@ int isMemAddrInRange(FILE *file, unsigned long addr, long n){
             return 0;    
         }
         endAddr = strtol(endAddr_s,&tmpPtr,16);    
-        printf("input addr: %lx, start addr: %lx, end addr: %lx\n",addr,startAddr,endAddr);
         //if this starting address is in the range
         if((addr < endAddr && addr > startAddr)|| addr == startAddr
             || addr == endAddr){
@@ -43,7 +42,6 @@ unsigned char *readMem(const char *pid, unsigned long addr, long n){
     //first verify whether the given addr range is mapped
     FILE *mapsFile = fileOpener(pid,4);
     if(NULL != mapsFile && 1 == isMemAddrInRange(mapsFile,addr,n)){ 
-        printf("mem is in range\n");
         FILE *memFile = fileOpener(pid, 5);
         //reposition the file stream to the starting addr
         fseeko(memFile,addr,SEEK_SET); 

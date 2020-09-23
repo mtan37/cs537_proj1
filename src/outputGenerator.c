@@ -1,88 +1,88 @@
 #include "outputGenerator.h"
 void printHeader(Flags *flags) {
     //print out header
-    if (1 == flags->flag_p) {
-        printf("PID ");
-    }
+    printf("%-5sPID  ","");
     if (1 == flags->flag_s) {
         printf("STATE ");
     }
     if (1 == flags->flag_U) {
-        printf("USER TIME ");
+        printf("USER_TIME ");
     }
     if (1 == flags->flag_S) {
-        printf("SYSTEM TIME ");
+        printf("SYSTEM_TIME ");
     }
     if (1 == flags->flag_v) {
-        printf("VIRTUAL MEMORY ");
+        printf("VIRTUAL_MEMORY ");
     }
     if (1 == flags->flag_c) {
-        printf("CMD LINE ");
+        printf("CMD_LINE%5s ","");
     }
     if (1 == flags->flag_m) {
         printf("MEM");
-    }
-    printf("\n");
-	
+    }	
 }
 
-void generateOutput(Flags *flags) {
+void generateOutput(Flags *flags, int uid) {
     int needFreeList = 0;
     ProcessNode *head;
     ProcessNode *curr;
     if (1 == flags->flag_p) { //p flag is present
-        ProcessNode *head = malloc(sizeof(ProcessNode));
-        ProcessNode *curr = head;
+        head = malloc(sizeof(ProcessNode));
+        curr = head;
         ProcessNode *tmpPtr;
         int i = 0;
-	int counter = flags->content_p_size;
+	    int counter = flags->length_p;
         while(i < counter) {
             curr->pid = flags->content_p[i];
             curr->next = malloc(sizeof(ProcessNode));
             tmpPtr = curr;
             curr = curr->next;
+            i++;
         }
         free(curr);
         tmpPtr->next = NULL;
-        i++;
     } else { // p flag is not present
         //use the process from getProcessesList(uid)
-	int uid = getuid();
         head = getProcessesList(uid);
         if(head == NULL){
             printf("Current user doesn't own any processes\n");
             exit(1);
         }
-        curr = head;
         needFreeList = 1;
     }
     printHeader(flags);
     curr = head;
     while(curr != NULL) {
-        printf("%s: ", curr->pid); //print out the pid of the process
+        printf("\n");
+        //pre-load info for the process to make sure it exist
+        StatInfo *statInfoVar = statParser(curr->pid);
+        StatmInfo *statmInfoVar = statmParser(curr->pid);
+        CmdInfo *cmdInfoVar = cmdlineParser(curr->pid);
+        if(NULL == statInfoVar || NULL == statmInfoVar || NULL == cmdInfoVar){
+	        curr = curr->next;
+            continue;
+        }
+        printf("%8s: ", curr->pid); //print out the pid of the process
         if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
-            StatInfo *statInfoVar = statParser(curr->pid);
             if (1 == flags->flag_s) {
-                printf("%s ", statInfoVar->flag_sField);
+                printf("%-5s ", statInfoVar->flag_sField);
             }
 		
             if (1 == flags->flag_U) {
-                printf("%s ", statInfoVar->flag_sField);
+                printf("%-9s ", statInfoVar->flag_UField);
             }
 		
             if (1 == flags->flag_S) {
-                printf("%s ", statInfoVar->flag_sField);
+                printf("%-11s ", statInfoVar->flag_SField);
             }
         }
-
+        
         if (1 == flags->flag_v) {
-            StatmInfo *statmInfoVar = statmParser(curr->pid);
-            printf("%s ", statmInfoVar->flag_vField);
+            printf("%-14s ", statmInfoVar->flag_vField);
         }
 
         if (1 == flags->flag_c) {
-            CmdInfo *cmdInfoVar = cmdlineParser(curr->pid);
-            printf("%s ", cmdInfoVar->flag_cField);
+            printf("[%-11s] ", cmdInfoVar->flag_cField);
         }
 	    
         if (1 == flags->flag_m) {
@@ -93,16 +93,15 @@ void generateOutput(Flags *flags) {
                 for(int i = 0; i < flags->length_m;i++){
                     printf("%02x ", memContent[i]);
                 }
-                printf("\n");
             }
             else{
                 printf("Requested mem range is not mapped\n");
             }
 
         }
-        printf("\n");
-	curr = curr->next;
+	    curr = curr->next;
     }
+    printf("\n");
     //free the linked list struct is it is allocated in this function
     if(1 == needFreeList){
         ProcessNode *next;
