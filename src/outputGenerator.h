@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #ifndef OUTPUTGENERATOR_H
 #define OUTPUTGENERATOR_H
 

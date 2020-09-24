@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #ifndef PROCESSARGS_H
 #define PROCESSARGS_H
 

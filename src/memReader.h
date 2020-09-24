@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #ifndef MEMREADER_H
 #define MEMREADER_H
 #include <stdio.h>

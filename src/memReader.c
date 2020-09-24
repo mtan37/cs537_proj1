@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #include "memReader.h"
 int isMemAddrInRange(FILE *file, unsigned long addr, long n){
     size_t bufSize = 64;

@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #include "userProcUtil.h"
 
 int BUFSIZE = 50;
@@ -125,6 +127,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
     }
 
     while ((processInfo = readdir(processes)) != NULL) {
+        //gets correct directory
         char *processDirectory = stringConcat(proc, processInfo->d_name);
         if (processDirectory == NULL) {            
             freeProcessList(head, 1);
@@ -153,6 +156,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
                     uidStore = strtok_r(NULL, "\t", &charPtr);
                     //no check in place
                     //if status file is corrupted, the if will not be entered
+                    //stores the info needed from the directory
                     if (uid == atoi(uidStore)){
                         curr->pid = calloc(1,sizeof(processInfo->d_name));
                         strcpy(curr->pid, processInfo->d_name);

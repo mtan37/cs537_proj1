@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #ifndef FILEPARSER_H
 #define FILEPARSER_H
 #include <stdio.h>
