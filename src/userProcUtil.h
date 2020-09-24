@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #ifndef USERPROCUTIL_H
 #define USERPROCUTIL_H
 #include <stdlib.h>
