@@ -104,7 +104,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
     }
 
     while ((processInfo = readdir(processes)) != NULL) {
-        char *processDirectory = stringConcat(proc, processInfo->d_name);
+        char *processDirectory = stringConcat(proc, processInfo->d_name); //gets correct directory
         if (processDirectory == NULL) {
             free(curr);
             return NULL;
@@ -132,7 +132,7 @@ ProcessNode* getProcessesList(unsigned int uid) {
                     uidStore = strtok_r(NULL, "\t", &charPtr);
                     //no check in place
                     //if status file is corrupted, the if will not be entered
-                    if (uid == atoi(uidStore)){
+                    if (uid == atoi(uidStore)){ //stores the info needed from the directory
                         curr->pid = malloc(sizeof(processInfo->d_name));
                         strcpy(curr->pid, processInfo->d_name);
                         curr->next = malloc(sizeof(ProcessNode));
