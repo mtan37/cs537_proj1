@@ -1,5 +1,7 @@
 Class assignment for CS537 Operating System Fall 2020
 
+Authors: Marvin Tan(marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 Build a customized ps command
 Usage:
 
