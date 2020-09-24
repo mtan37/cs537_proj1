@@ -1,5 +1,5 @@
 #include "fileParser.h"
-const int BUFFER_S = 50;
+const int BUFFER_S = 100;
 
 StatInfo *statParser(const char *pid){
 	StatInfo *statInfoVar = calloc(1,sizeof(StatInfo));
@@ -13,6 +13,8 @@ StatInfo *statParser(const char *pid){
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,1);
     if(file == NULL){//the pid doesn't exist
+        free(statInfoVar);
+        free(buff);
         return NULL;
     }
     //continue read until get all the needed variable of end of the line
@@ -36,16 +38,16 @@ StatInfo *statParser(const char *pid){
         }
         buff[i] = '\0';
         if (flagFieldIndex == getFlag_sFieldIndex){
-            statInfoVar->flag_sField = calloc(i,sizeof(char));
+            statInfoVar->flag_sField = calloc(1,sizeof(char) * i +1);
             strncpy(statInfoVar->flag_sField,buff,i);
         }
         else if (flagFieldIndex == getFlag_UFieldIndex){
-            statInfoVar->flag_UField = calloc(1,i);
-            strncpy(statInfoVar->flag_UField,buff,i);
+            statInfoVar->flag_UField = calloc(1,i+1);
+            strncpy(statInfoVar->flag_UField,buff,i+1);
         }
         else if(flagFieldIndex == getFlag_SFieldIndex){
-            statInfoVar->flag_SField = calloc(1,i);
-            strncpy(statInfoVar->flag_SField,buff,i);
+            statInfoVar->flag_SField = calloc(1,i+1);
+            strncpy(statInfoVar->flag_SField,buff,i+1);
         }
         flagFieldIndex++;
         i = 0;
@@ -60,6 +62,8 @@ StatmInfo *statmParser(const char *pid){
 	char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,2);
     if(file == NULL){//the pid doesn't exist
+        free(statmInfoVar);
+        free(buff);
         return NULL;
     }
     //continue read until get all the needed variable of end of the line
@@ -81,7 +85,7 @@ StatmInfo *statmParser(const char *pid){
         }
         buff[i] = '\0';
         if (flagFieldIndex == getFlag_vFieldIndex){
-            statmInfoVar->flag_vField = calloc(i,sizeof(char));
+            statmInfoVar->flag_vField = calloc(1,sizeof(char) * i +1);
             strncpy(statmInfoVar->flag_vField,buff,i);
         }
         flagFieldIndex++;
@@ -97,6 +101,8 @@ CmdInfo *cmdlineParser(const char *pid){
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,3);	
     if(file == NULL){//the pid doesn't exist
+        free(cmdInfoVar);
+        free(buff);
         return NULL;
     }
     char charTemp = '-';
@@ -113,7 +119,7 @@ CmdInfo *cmdlineParser(const char *pid){
             //save string from the buff
             buff[i] = '\0';
             //initialize the char array and load in the command
-            cmdInfoVar->flag_cField = calloc(i,sizeof(char));
+            cmdInfoVar->flag_cField = calloc(i,sizeof(char)+1);
             strncpy(cmdInfoVar->flag_cField,buff,i);
             run = 0;
             break;
@@ -126,6 +132,8 @@ CmdInfo *cmdlineParser(const char *pid){
             exit(1);
         }
     }
+    free(buff);
+	fclose(file);
     return cmdInfoVar;
 }
 

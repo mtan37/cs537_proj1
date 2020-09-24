@@ -11,12 +11,14 @@ int isMemAddrInRange(FILE *file, unsigned long addr, long n){
     while(returnV != -1 || returnV != EOF){
         tmpPtr = strtok(buff," ");
         if('\0' == *tmpPtr){
+            free(buff);
             return 0;
         }
         startAddr_s = strtok(tmpPtr,"-");
         endAddr_s = strtok(NULL,"-");
         startAddr = strtol(startAddr_s,&tmpPtr, 16);    
         if('\0' != *tmpPtr){//if the addr is converted incorrectly
+            free(buff);
             return 0;    
         }
         endAddr = strtol(endAddr_s,&tmpPtr,16);    
@@ -25,12 +27,14 @@ int isMemAddrInRange(FILE *file, unsigned long addr, long n){
             || addr == endAddr){
             //check if the length is in bound
             if((n-1) <= (endAddr - addr)){
+                free(buff);
                 return 1;
             }
         }
         returnV = getline(&buff,&bufSize,file);
     }
-     return 0;
+    free(buff);
+    return 0;
 }
 
 /*
@@ -48,12 +52,14 @@ unsigned char *readMem(const char *pid, unsigned long addr, long n){
         unsigned char *memContent = calloc(1,n+1);
         fread(memContent, sizeof(unsigned char) , n, memFile);
         memContent[n] = '\0';
-        //close the mem file
+        //close the mem file and maps file
         fclose(memFile);
+        fclose(mapsFile);
         //detach from the process
         ptrace(PTRACE_DETACH,pid,0,0);
         return memContent;
     }    
+    fclose(mapsFile);
     return NULL;
 }
 

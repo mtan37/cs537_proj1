@@ -31,5 +31,9 @@ typedef struct Flags{
  * int length_p = 0;
  */
 Flags *initFlags();
+/*
+ * This is a helper function to help free the flag structure 
+ */
+void freeFlagsStruct(Flags *flags);
 void processArguments(int argc,char **arg,Flags *flagsVar);
 #endif

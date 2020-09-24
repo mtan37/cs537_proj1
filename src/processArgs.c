@@ -20,6 +20,7 @@ Flags *initFlags(){
     flagsVar->length_m = 0;
     return flagsVar;
 }
+
 /*
  * Takes a char array and check if all chars are digits
  * Return 1 if they are all digits, and return 0 otherwise
@@ -39,6 +40,7 @@ int isInputDigits(char *input){
         return 0;
     }
 }
+
 /*
  * Check whether a pid is valid numeric string
  * If valid, return the length of the pid string. If not valid, return 0
@@ -103,7 +105,7 @@ int isFlagFormatValid(char *flag){
     return 0;
 }
 
-/**
+/*
  * Set the flags to default value if they are not already set by users
  */
 void setFlagsToDefault(Flags *flagsVar){
@@ -130,7 +132,7 @@ void setFlagsToDefault(Flags *flagsVar){
         flagsVar->flag_m = 0;
 }
 
-/**
+/*
  * Print usage to console
  */
 void printUsage(){
@@ -150,7 +152,16 @@ void printUsage(){
     printf("    -c- turns the -c option off\n");
     printf("    -m <addr> <len> Display content of a process's memory.\n");
 }
-/**
+
+/*
+ * This is a helper function to help free the flag structure 
+ */ 
+void freeFlagsStruct(Flags *flags){
+    free(flags->content_p);
+    free(flags);
+}
+
+/*
  * add new pid to the pid list in the flag struct
  */
 void addPidToList(Flags *flagsVar, char *pid){
@@ -167,9 +178,15 @@ void addPidToList(Flags *flagsVar, char *pid){
     else{
         printf("Error: Invalid pid format: %s \n",pid);
         printUsage();
+        freeFlagsStruct(flagsVar);
         exit(1);
     }   
 }
+
+/*
+ * Process flag arguments
+ * Exit upon invalid formart error
+ */
 void processArguments(int argc,char **argv, Flags *flagsVar){
     //check if the count of argument is valid
     if(argc > 0){
@@ -189,6 +206,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                 else {
                     printf("Error: Invalid flag format: %s \n",argv[count]);
                     printUsage();
+                    freeFlagsStruct(flagsVar);
                     exit(1);
                 }
                 //process the flag arg
@@ -249,7 +267,8 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                         }
                         else{//skip the length argument
                             if (1 != isMemAddrValid){
-                                printf("Error: Invalid memory address input format\n");
+                                printf("Error: Invalid memory address input format\n"); 
+                                freeFlagsStruct(flagsVar);
                                 exit(1);
                             }else{
                                 printf("Warning: duplicate -m flag. Only the first valid instance will be used\n"); 
@@ -265,6 +284,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                         }
                         else{
                             printf("Error: Invalid memory address range length input format\n");
+                            freeFlagsStruct(flagsVar);
                             exit(1);
                         }       
                         //switch the flag var
@@ -273,12 +293,14 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                         else{
                             printf("Error: missing mem length argument\n");
                             printUsage();
+                            freeFlagsStruct(flagsVar);
                             exit(1);
                         }
                         break;
                     default:
                         printf("Error: Flag type %s doesn exist \n",argv[count]);
                         printUsage();
+                        freeFlagsStruct(flagsVar);
                         exit(1);
                 }
                 //increase the count
@@ -288,6 +310,7 @@ void processArguments(int argc,char **argv, Flags *flagsVar){
                 //if it is not a flag, return an error
                 printf("Error: Invalid argument.\n");
                 printUsage();
+                freeFlagsStruct(flagsVar);
                 exit(1);
             }
         }

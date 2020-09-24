@@ -81,6 +81,27 @@ FILE *fileOpener(const char *pid, int flag){
 }
 
 /*
+ * This is a helper function to free the mem allocated for a linked process list
+ * The function will only free the pid field in the ProcessNode struct only if 
+ * the needFreePid field is set to 1
+ */
+void freeProcessList(ProcessNode *head, int needFreePid){
+    //free the linked list struct is it is allocated in this function
+    ProcessNode *next;
+    while(NULL != head->next){
+        next = head->next;
+        if(1 == needFreePid){
+            printf("#111 pid freed\n");
+            free(head->pid);
+        }
+        free(head);
+        head = next;
+    }
+    if(1 == needFreePid)
+        free(head->pid);
+    free(head);
+}
+/*
  * Return the head of a linked list of all the processes owned by the uid
  */
 ProcessNode* getProcessesList(unsigned int uid) {
@@ -98,15 +119,15 @@ ProcessNode* getProcessesList(unsigned int uid) {
     ProcessNode *end = NULL;
     processes = opendir(proc);
     if (processes == NULL) {
-        free(curr);
+        freeProcessList(head, 1);
         closedir(processes);
         return NULL;
     }
 
     while ((processInfo = readdir(processes)) != NULL) {
         char *processDirectory = stringConcat(proc, processInfo->d_name);
-        if (processDirectory == NULL) {
-            free(curr);
+        if (processDirectory == NULL) {            
+            freeProcessList(head, 1);
             return NULL;
         }
         char *charPtr;
@@ -133,19 +154,16 @@ ProcessNode* getProcessesList(unsigned int uid) {
                     //no check in place
                     //if status file is corrupted, the if will not be entered
                     if (uid == atoi(uidStore)){
-                        curr->pid = malloc(sizeof(processInfo->d_name));
+                        curr->pid = calloc(1,sizeof(processInfo->d_name));
                         strcpy(curr->pid, processInfo->d_name);
-                        curr->next = malloc(sizeof(ProcessNode));
+                        curr->next = calloc(1,sizeof(ProcessNode));
                         end = curr;
                         curr = curr->next;
-                        curr->pid = NULL;
                     }
                 }
                 free(fileName);
                 if (-1 == closedir(subdirectory)){
-                    free(curr->pid);
-                    free(curr->next);
-                    free(curr);
+                    freeProcessList(head, 1);
                     free(processDirectory);
                     return NULL;
                 }
@@ -153,14 +171,17 @@ ProcessNode* getProcessesList(unsigned int uid) {
         }
         free(processDirectory);
     }
+    //free the very end node that is allocated but not initialized
     if(NULL != end){
         free(end->next);
         end->next = NULL; 
     }
     //out of the while reading loop
     if(-1 == closedir(processes)) {
-        free(curr);
+        freeProcessList(head, 1);
         return NULL;
     }
     return head;
 }
+
+
