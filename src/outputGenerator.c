@@ -34,6 +34,10 @@ void generateOutput(Flags *flags, int uid) {
     ProcessNode *curr; //points to whichever process we are on, starting with head
     if (1 == flags->flag_p) { //p flag is present
         head = malloc(sizeof(ProcessNode));
+        if(NULL == head){
+            printf("Error: Don't have enough memory for var allocation.\n");
+            exit(1); 
+        }
         curr = head;
         ProcessNode *tmpPtr;
         int i = 0;
@@ -41,6 +45,10 @@ void generateOutput(Flags *flags, int uid) {
         while(i < counter) { //goes through entire list to create the ProcessNodes
             curr->pid = flags->content_p[i];
             curr->next = malloc(sizeof(ProcessNode));
+            if(NULL == curr->next){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1); 
+            }
             tmpPtr = curr;
             curr = curr->next;
             i++;

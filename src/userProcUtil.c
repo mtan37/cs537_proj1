@@ -28,7 +28,10 @@ char* stringConcat(const char* string1, const char* string2) {
  */
 FILE *fileOpener(const char *pid, int flag){
     char *path_tmp = calloc(1,BUFSIZE);
-    //TODO: handling error for calloc
+	if(NULL == path_tmp){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     strncpy(path_tmp,"/proc/\0",BUFSIZE);
     char *path = stringConcat(path_tmp, pid);
     free(path_tmp);
@@ -119,6 +122,10 @@ ProcessNode* getProcessesList(unsigned int uid) {
     char *fileName;  // the file to open
 
     ProcessNode *head = (ProcessNode*) malloc(sizeof(ProcessNode));
+    if(NULL == head){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     ProcessNode *curr = head;
     ProcessNode *end = NULL;
     processes = opendir(proc);
@@ -161,8 +168,16 @@ ProcessNode* getProcessesList(unsigned int uid) {
                     //stores the info needed from the directory
                     if (uid == atoi(uidStore)){
                         curr->pid = calloc(1,sizeof(processInfo->d_name));
+                        if(NULL == curr->pid){
+                            printf("Error: Don't have enough memory for var allocation.\n");
+                            exit(1); 
+                        }
                         strcpy(curr->pid, processInfo->d_name);
                         curr->next = calloc(1,sizeof(ProcessNode));
+                        if(NULL == curr->next){
+                            printf("Error: Don't have enough memory for var allocation.\n");
+                            exit(1); 
+                        }
                         end = curr;
                         curr = curr->next;
                     }

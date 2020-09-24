@@ -10,12 +10,15 @@ const int BUFFER_S = 100;
 StatInfo *statParser(const char *pid){
 	StatInfo *statInfoVar = calloc(1,sizeof(StatInfo));
 	statInfoVar->pid = pid;
-    if(statInfoVar == NULL){
+    if(NULL == statInfoVar){
         printf("Error: Don't have enough memory for var allocation.\n");
         exit(1);        
     }
-    //TODO ERROR HANDLER for all calloc and malloc
     char *buff = calloc(1,BUFFER_S);
+    if(NULL == buff){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1);        
+    }
     FILE *file = fileOpener(pid,1);
     if(NULL == file){//the pid doesn't exist
         free(statInfoVar);
@@ -44,14 +47,26 @@ StatInfo *statParser(const char *pid){
         buff[i] = '\0';
         if (flagFieldIndex == getFlag_sFieldIndex){
             statInfoVar->flag_sField = calloc(1,sizeof(char) * i +1);
+            if(NULL == statInfoVar->flag_sField){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1);        
+            }
             strncpy(statInfoVar->flag_sField,buff,i);
         }
         else if (flagFieldIndex == getFlag_UFieldIndex){
             statInfoVar->flag_UField = calloc(1,i+1);
+            if(NULL == statInfoVar->flag_UField){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1);        
+            }
             strncpy(statInfoVar->flag_UField,buff,i+1);
         }
         else if(flagFieldIndex == getFlag_SFieldIndex){
             statInfoVar->flag_SField = calloc(1,i+1);
+            if(NULL == statInfoVar->flag_SField){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1);        
+            }
             strncpy(statInfoVar->flag_SField,buff,i+1);
         }
         flagFieldIndex++;
@@ -69,7 +84,15 @@ StatInfo *statParser(const char *pid){
  */
 StatmInfo *statmParser(const char *pid){
 	StatmInfo *statmInfoVar = calloc(1,sizeof(StatmInfo));
-	char *buff = calloc(1,BUFFER_S);
+	if(NULL == statmInfoVar){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
+    char *buff = calloc(1,BUFFER_S);
+	if(NULL == buff){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     FILE *file = fileOpener(pid,2);
     if(NULL == file){//the pid doesn't exist
         free(statmInfoVar);
@@ -96,6 +119,10 @@ StatmInfo *statmParser(const char *pid){
         buff[i] = '\0';
         if (flagFieldIndex == getFlag_vFieldIndex){
             statmInfoVar->flag_vField = calloc(1,sizeof(char) * i +1);
+            if(NULL == statmInfoVar->flag_vField){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1); 
+            }
             strncpy(statmInfoVar->flag_vField,buff,i);
         }
         flagFieldIndex++;
@@ -113,7 +140,15 @@ StatmInfo *statmParser(const char *pid){
  */
 CmdInfo *cmdlineParser(const char *pid){
 	CmdInfo *cmdInfoVar = calloc(1,sizeof(CmdInfo));
+	if(NULL == cmdInfoVar){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     char *buff = calloc(1,BUFFER_S);
+	if(NULL == buff){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     FILE *file = fileOpener(pid,3);	
     if(NULL == file){//the pid doesn't exist
         free(cmdInfoVar);
@@ -135,6 +170,10 @@ CmdInfo *cmdlineParser(const char *pid){
             buff[i] = '\0';
             //initialize the char array and load in the command
             cmdInfoVar->flag_cField = calloc(i,sizeof(char)+1);
+            if(NULL == cmdInfoVar->flag_cField){
+                printf("Error: Don't have enough memory for var allocation.\n");
+                exit(1); 
+            }
             strncpy(cmdInfoVar->flag_cField,buff,i);
             run = 0;
             break;

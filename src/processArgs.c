@@ -8,6 +8,10 @@ const int MAX_PID_LIST_SIZE = 20;
  */
 Flags *initFlags(){
     Flags *flagsVar = calloc(1, sizeof(Flags));
+    if(NULL == flagsVar){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     flagsVar->flag_p = -1;
     flagsVar->flag_s = -1;
     flagsVar->flag_U = -1;
@@ -18,6 +22,10 @@ Flags *initFlags(){
     flagsVar->length_p = 0;
     flagsVar->content_p_size = MAX_PID_LIST_SIZE;//default size 20
     flagsVar->content_p = calloc(flagsVar->content_p_size, sizeof(char*));
+    if(NULL == flagsVar->content_p){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     flagsVar->addr_m = 0;
     flagsVar->length_m = 0;
     return flagsVar;

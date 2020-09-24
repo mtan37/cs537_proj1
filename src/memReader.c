@@ -8,6 +8,10 @@
 int isMemAddrInRange(FILE *file, unsigned long addr, long n){
     size_t bufSize = 64;
     char *buff = (char *)calloc(1,bufSize);
+	if(NULL == buff){
+        printf("Error: Don't have enough memory for var allocation.\n");
+        exit(1); 
+    }
     char *tmpPtr;
     ssize_t returnV = getline(&buff,&bufSize,file);
     char *startAddr_s;
@@ -56,6 +60,10 @@ unsigned char *readMem(const char *pid, unsigned long addr, long n){
         //reposition the file stream to the starting addr
         fseeko(memFile,addr,SEEK_SET); 
         unsigned char *memContent = calloc(1,n+1);
+        if(NULL == memContent){
+            printf("Error: Don't have enough memory for var allocation.\n");
+            exit(1); 
+        }
         fread(memContent, sizeof(unsigned char) , n, memFile);
         memContent[n] = '\0';
         //close the mem file and maps file
