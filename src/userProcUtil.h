@@ -14,7 +14,18 @@ typedef struct ProcessNode {
 	char *pid;
 	struct ProcessNode *next;
 } ProcessNode;
+/*
+ * Return a string that is a deep copy of the contatination of the string1+srting2
+ */
 char *stringConcat(const char *string1, const char *string2);
+/*
+ *  open a file under the /proc/<pid>/ directory.
+ *  The file opened is based on the  *  flag given
+ *  flag = 1: /proc/<pid>/stat
+ *  flag = 2: /proc/<pid>/statm
+ *  flag = 3: /proc/<pid>/cmdline
+ *  Return null if the file pointed at the file path doesn't exist
+ */
 FILE *fileOpener(const char *pid, int flag);
 /*
  * This is a helper function to free the mem allocated for a linked process list
@@ -22,5 +33,8 @@ FILE *fileOpener(const char *pid, int flag);
  * the needFreePid field is set to 1
  */
 void freeProcessList(ProcessNode *head, int needFreePid);
+/*
+ * Return the head of a linked list of all the processes owned by the uid
+ */
 ProcessNode* getProcessesList(unsigned int uid);
 #endif

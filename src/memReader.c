@@ -1,6 +1,10 @@
 // Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
-
 #include "memReader.h"
+
+/*
+ * Check whether the memory is in the mapped range. 
+ * Return 1 if it is range, otherwise 0 is returned 
+ */
 int isMemAddrInRange(FILE *file, unsigned long addr, long n){
     size_t bufSize = 64;
     char *buff = (char *)calloc(1,bufSize);

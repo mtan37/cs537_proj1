@@ -1,8 +1,9 @@
 // Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
-
 #include "outputGenerator.h"
+/*
+ * Print out header for flags that are set
+ */
 void printHeader(Flags *flags) {
-    //print out header for flags that are set
     printf("%-5sPID  ","");
     if (1 == flags->flag_s) {
         printf("STATE ");

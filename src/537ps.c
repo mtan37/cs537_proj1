@@ -1,5 +1,4 @@
 // Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>

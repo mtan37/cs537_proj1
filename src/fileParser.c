@@ -1,8 +1,12 @@
 // Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
-
 #include "fileParser.h"
 const int BUFFER_S = 100;
 
+/**
+ * Takes in the pid of a process, parse its stat file and store the values in
+ * struct StatInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
+ */
 StatInfo *statParser(const char *pid){
 	StatInfo *statInfoVar = calloc(1,sizeof(StatInfo));
 	statInfoVar->pid = pid;
@@ -11,10 +15,9 @@ StatInfo *statParser(const char *pid){
         exit(1);        
     }
     //TODO ERROR HANDLER for all calloc and malloc
-	//TODO Add free() to all allocated heap variables
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,1);
-    if(file == NULL){//the pid doesn't exist
+    if(NULL == file){//the pid doesn't exist
         free(statInfoVar);
         free(buff);
         return NULL;
@@ -59,11 +62,16 @@ StatInfo *statParser(const char *pid){
 	return statInfoVar;
 }
 
+/**
+ * Takes in the pid of a process, parse its statm file and store the values in
+ * struct StatmInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
+ */
 StatmInfo *statmParser(const char *pid){
 	StatmInfo *statmInfoVar = calloc(1,sizeof(StatmInfo));
 	char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,2);
-    if(file == NULL){//the pid doesn't exist
+    if(NULL == file){//the pid doesn't exist
         free(statmInfoVar);
         free(buff);
         return NULL;
@@ -98,11 +106,16 @@ StatmInfo *statmParser(const char *pid){
     return statmInfoVar;
 }
 
+/**
+ * Takes in the pid of a process, parse the cmdline file and store the values in
+ * struct CmdInfo and return a pointer to the struct
+ * Return null if the process with pid doesn't exist
+ */
 CmdInfo *cmdlineParser(const char *pid){
 	CmdInfo *cmdInfoVar = calloc(1,sizeof(CmdInfo));
     char *buff = calloc(1,BUFFER_S);
     FILE *file = fileOpener(pid,3);	
-    if(file == NULL){//the pid doesn't exist
+    if(NULL == file){//the pid doesn't exist
         free(cmdInfoVar);
         free(buff);
         return NULL;

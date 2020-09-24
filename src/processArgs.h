@@ -37,5 +37,9 @@ Flags *initFlags();
  * This is a helper function to help free the flag structure 
  */
 void freeFlagsStruct(Flags *flags);
+/*
+ * Process flag arguments
+ * Exit upon invalid formart error
+ */
 void processArguments(int argc,char **arg,Flags *flagsVar);
 #endif

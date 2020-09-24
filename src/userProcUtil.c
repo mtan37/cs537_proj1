@@ -19,7 +19,8 @@ char* stringConcat(const char* string1, const char* string2) {
 }
 
 /*
- *  open a file under the /proc/<pid>/ directory. The file opened is based on the  *  flag given
+ *  open a file under the /proc/<pid>/ directory.
+ *  The file opened is based on the  *  flag given
  *  flag = 1: /proc/<pid>/stat
  *  flag = 2: /proc/<pid>/statm
  *  flag = 3: /proc/<pid>/cmdline
@@ -103,6 +104,7 @@ void freeProcessList(ProcessNode *head, int needFreePid){
         free(head->pid);
     free(head);
 }
+
 /*
  * Return the head of a linked list of all the processes owned by the uid
  */
