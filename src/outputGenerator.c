@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #include "outputGenerator.h"
 void printHeader(Flags *flags) {
     //print out header for flags that are set
