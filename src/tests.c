@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #include "tests.h"
 void printFlagsVar(Flags *flagsVar){
     //print out the flags
