@@ -1,6 +1,6 @@
 #include "outputGenerator.h"
 void printHeader(Flags *flags) {
-    //print out header
+    //print out header for flags that are set
     printf("%-5sPID  ","");
     if (1 == flags->flag_s) {
         printf("STATE ");
@@ -24,15 +24,15 @@ void printHeader(Flags *flags) {
 
 void generateOutput(Flags *flags, int uid) {
     int needFreeList = 0;
-    ProcessNode *head;
-    ProcessNode *curr;
+    ProcessNode *head; //points to first process in list
+    ProcessNode *curr; //points to whichever process we are on, starting with head
     if (1 == flags->flag_p) { //p flag is present
         head = malloc(sizeof(ProcessNode));
         curr = head;
         ProcessNode *tmpPtr;
         int i = 0;
-	    int counter = flags->length_p;
-        while(i < counter) {
+	int counter = flags->length_p;
+        while(i < counter) { //goes through entire list to create the ProcessNodes
             curr->pid = flags->content_p[i];
             curr->next = malloc(sizeof(ProcessNode));
             tmpPtr = curr;
@@ -50,20 +50,20 @@ void generateOutput(Flags *flags, int uid) {
         }
         needFreeList = 1;
     }
-    printHeader(flags);
+    printHeader(flags); //call function from above to print header here
     curr = head;
     while(curr != NULL) {
         printf("\n");
         //pre-load info for the process to make sure it exist
-        StatInfo *statInfoVar = statParser(curr->pid);
-        StatmInfo *statmInfoVar = statmParser(curr->pid);
-        CmdInfo *cmdInfoVar = cmdlineParser(curr->pid);
-        if(NULL == statInfoVar || NULL == statmInfoVar || NULL == cmdInfoVar){
-	        curr = curr->next;
+        StatInfo *statInfoVar = statParser(curr->pid); //stat info for current ProcessNode
+        StatmInfo *statmInfoVar = statmParser(curr->pid); //statm info for current ProcessNode
+        CmdInfo *cmdInfoVar = cmdlineParser(curr->pid); //command line info for current ProcessNode
+        if(NULL == statInfoVar || NULL == statmInfoVar || NULL == cmdInfoVar) { //error handling
+	    curr = curr->next;
             continue;
         }
         printf("%8s: ", curr->pid); //print out the pid of the process
-        if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) {
+        if (1 == flags->flag_s || 1 == flags->flag_U || 1 == flags->flag_S) { //gets correct info from statInfoVar if flagged
             if (1 == flags->flag_s) {
                 printf("%-5s ", statInfoVar->flag_sField);
             }
@@ -77,11 +77,11 @@ void generateOutput(Flags *flags, int uid) {
             }
         }
         
-        if (1 == flags->flag_v) {
+        if (1 == flags->flag_v) { //gets correct info from statmInfoVar if flagged
             printf("%-14s ", statmInfoVar->flag_vField);
         }
 
-        if (1 == flags->flag_c) {
+        if (1 == flags->flag_c) { //gets correct info from cmdInfoVar if flagged
             printf("[%-11s] ", cmdInfoVar->flag_cField);
         }
 	    
@@ -99,7 +99,7 @@ void generateOutput(Flags *flags, int uid) {
             }
 
         }
-	    curr = curr->next;
+	    curr = curr->next; //next ProcessNode in list
     }
     printf("\n");
     //free the linked list struct is it is allocated in this function
