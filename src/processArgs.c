@@ -1,3 +1,5 @@
+// Authors: Marvin Tan (marvin.tan@wisc.edu), Joseph Martin (jrmartin4@wisc.edu)
+
 #include "processArgs.h"
 const int MAX_PID_LIST_SIZE = 20;
 
